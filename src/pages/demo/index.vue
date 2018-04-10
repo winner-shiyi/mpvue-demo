@@ -14,12 +14,6 @@
       </div>
     </div>
 
-    <form class="form-container">
-      <input type="text" class="form-control" v-model="motto" placeholder="v-model" />
-      <input type="text" class="form-control" v-model.lazy="motto" placeholder="v-model.lazy" />
-    </form>
-    <a href="/pages/counter/main" class="counter">去往Vuex示例页面</a>
-    <div @click="bindDemoTep">aaaaaa</div>
   </div>
 </template>
 
@@ -29,7 +23,7 @@ import card from '@/components/card';
 export default {
   data() {
     return {
-      motto: 'Hello World',
+      motto: '我是新建的demo页面',
       userInfo: {},
     };
   },
@@ -41,10 +35,6 @@ export default {
   methods: {
     bindViewTap() {
       const url = '../logs/main';
-      wx.navigateTo({ url });
-    },
-    bindDemoTep() {
-      const url = '../demo/main';
       wx.navigateTo({ url });
     },
     getUserInfo() {
