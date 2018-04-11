@@ -1,11 +1,17 @@
 import Vue from 'vue';
+import mpvueToastRegistry from 'mptoast/registry';
+import post from '@/utils/requestMethod';
 import App from './App';
+
 
 Vue.config.productionTip = false;
 App.mpType = 'app';
 
 const app = new Vue(App);
 app.$mount();
+Vue.prototype.$post = post;
+
+mpvueToastRegistry(Vue);
 
 export default {
   // 这个字段走 app.json

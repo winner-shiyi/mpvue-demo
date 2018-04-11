@@ -1,5 +1,5 @@
 <template>
-  <div class="container" @click="clickHandle('传入的msg', $event)">
+  <div class="container">
 
     <div class="userinfo" @click="bindViewTap">
       <img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" background-size="cover" />
@@ -59,15 +59,24 @@ export default {
         },
       });
     },
-    clickHandle(msg, ev) {
-      console.log('clickHandle11:', msg);
-      console.log('clickHandle33:', ev);
-    },
   },
 
   created() {
     // 调用应用实例的方法获取全局数据
     this.getUserInfo();
+    console.log('index页面');
+    this.$post('user/login', { name: 'weina' }).then((res) => {
+      console.log('res----', res);
+    });
+  },
+  onLoad() {
+    console.log('onLoad');
+  },
+  onShow() {
+    console.log('onShow');
+  },
+  mounted() {
+    console.log('mounted');
   },
 };
 </script>

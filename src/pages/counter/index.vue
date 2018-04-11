@@ -28,6 +28,9 @@ export default {
       store.commit('decrement');
     },
   },
+  created() {
+    console.log('counter页面');
+  },
 };
 
 </script>

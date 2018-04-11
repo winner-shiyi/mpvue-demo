@@ -9,16 +9,20 @@
     </div>
 
     <div class="usermotto">
-      <div class="user-motto">
+      <div class="user-motto" @click="showToast">
         <card :text="motto"></card>
       </div>
     </div>
+    <mptoast></mptoast>
 
   </div>
 </template>
 
 <script>
+
 import card from '@/components/card';
+import mptoast from 'mptoast';
+
 
 export default {
   data() {
@@ -30,9 +34,13 @@ export default {
 
   components: {
     card,
+    mptoast,
   },
 
   methods: {
+    showToast() {
+      this.$mptoast('我是提示信息');
+    },
     bindViewTap() {
       const url = '../logs/main';
       wx.navigateTo({ url });
@@ -56,6 +64,7 @@ export default {
   },
 
   created() {
+    console.log('demo页面');
     // 调用应用实例的方法获取全局数据
     this.getUserInfo();
   },
