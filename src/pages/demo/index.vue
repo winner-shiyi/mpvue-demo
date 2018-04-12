@@ -38,6 +38,12 @@ export default {
   },
 
   methods: {
+    wxtoast() {
+      wx.showToast({
+        title: '我是微信自带提示1234567',
+        icon: 'none',
+      });
+    },
     showToast() {
       this.$mptoast('我是提示信息');
     },

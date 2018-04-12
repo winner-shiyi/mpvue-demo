@@ -11,6 +11,7 @@ export default function post(url, body) {
       },
       success(res) {
         resolve(res.data);  // 把返回的数据传出去
+        // resolve(e)  //注意,这里要用resolve,否则前端代码会崩溃
       },
       fail(ret) {
         reject(ret);   // 把错误信息传出去
