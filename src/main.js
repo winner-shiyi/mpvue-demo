@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import mpvueToastRegistry from 'mptoast/registry';
 import post from '@/utils/requestMethod';
+import { PromiseAjax } from '@/utils/promiseAjax';
 import App from './App';
 
 
@@ -10,6 +11,7 @@ App.mpType = 'app';
 const app = new Vue(App);
 app.$mount();
 Vue.prototype.$post = post;
+Vue.prototype.$PromiseAjax = PromiseAjax;
 
 mpvueToastRegistry(Vue);
 

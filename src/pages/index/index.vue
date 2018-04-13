@@ -26,6 +26,7 @@
 <script>
 import card from '@/components/card';
 
+
 export default {
   data() {
     return {
@@ -66,8 +67,11 @@ export default {
     this.getUserInfo();
     console.log('index页面');
     this.$post('user/login', { name: 'weina' }).then((res) => {
-      console.log('res----', res);
+      console.log('res11111----', res);
     });
+    // this.$PromiseAjax('user/login', { name: 'weina' }).then((res) => {
+    //   console.log('res2222----', res);
+    // });
   },
   onLoad() {
     console.log('onLoad');

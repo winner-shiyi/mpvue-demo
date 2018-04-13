@@ -9,11 +9,17 @@
     </div>
 
     <div class="usermotto">
-      <div class="user-motto" @click="showToast">
+      <div class="user-motto" @click="wxtoast">
         <card :text="motto"></card>
       </div>
     </div>
     <mptoast></mptoast>
+
+    <checkbox-group @change="checkboxChange($event)">
+    <label class="checkbox" v-for="(item, index) in items" :key="index">
+        <checkbox value="item.name" checked="item.checked"/>{{item.value}}
+    </label>
+    </checkbox-group>
 
   </div>
 </template>
@@ -27,8 +33,16 @@ import mptoast from 'mptoast';
 export default {
   data() {
     return {
-      motto: '我是新建的demo页面',
+      motto: '我是购物车页面',
       userInfo: {},
+      items: [
+        { name: 'USA', value: '美国' },
+        { name: 'CHN', value: '中国', checked: 'true' },
+        { name: 'BRA', value: '巴西' },
+        { name: 'JPN', value: '日本' },
+        { name: 'ENG', value: '英国' },
+        { name: 'TUR', value: '法国' },
+      ],
     };
   },
 
@@ -38,6 +52,9 @@ export default {
   },
 
   methods: {
+    checkboxChange(e) {
+      console.log('checkbox发生change事件，携带value值为：', e);
+    },
     wxtoast() {
       wx.showToast({
         title: '我是微信自带提示1234567',

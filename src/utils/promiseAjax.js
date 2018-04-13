@@ -1,5 +1,3 @@
-// import { resolve } from "url";
-
 class PromiseAjax {
   constructor() {
     this.baseUrl = 'http://172.16.2.71:8068/mockjsdata/86/';
