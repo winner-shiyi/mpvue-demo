@@ -1,5 +1,7 @@
 <template>
-    <view class="split"></view>
+    <view class="split">
+        <slot></slot>
+    </view>
 </template>
 <script>
     export default {};

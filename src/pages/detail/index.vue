@@ -19,7 +19,17 @@
                 <div class="price-old"></div>
             </view>
         </view>
-        <split></split>
+        <split>
+            <h1 class="hh-slot">我是默认slot1111</h1>
+        </split>
+        <view class="cells-content">
+            <div class="cells-title">规格数量选择：</div>
+            <div class="single-cell-str" v-if="showSingleCel">{{good.cells[0]}}</div>
+            <div class="multi-cell-content" v-if="!showSingleCel">
+                <span>请选择规格</span>
+                <div class="multi-cell-ul"></div>
+            </div>
+        </view>
     </view>
     <loading v-if="loadingHidden">
         加载中...
@@ -50,6 +60,10 @@ export default {
         title: '台湾树上熟是的根深蒂固十多个是的根深蒂固是的金钻ID房d间号凤梨1个装 单果约1150g',
         subtittle: '绵嫩无渣 鲜甜香滑',
         price: '29.8',
+        cells: [
+          '1150g*1',
+        //   '2150g*1',
+        ],
       },
     };
   },
@@ -58,7 +72,11 @@ export default {
     card,
     split,
   },
-
+  computed: {
+    showSingleCel() {
+      return this.good.cells.length === 1 ? 'true' : false;
+    },
+  },
   methods: {
     onProductsItemTap() {
       const url = '../logs/main';
