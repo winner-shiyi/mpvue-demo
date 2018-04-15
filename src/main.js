@@ -22,7 +22,9 @@ export default {
     pages: [
       'pages/index/main',
       'pages/logs/main',
-      '^pages/demo/main',
+      'pages/demo/main',
+      'pages/my/main',
+      '^pages/detail/main',
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -36,18 +38,14 @@ export default {
           pagePath: 'pages/index/main',
           // "iconPath":"imgs/toolbar/home.png",
           // "selectedIconPath":"imgs/toolbar/home@selected.png",
-          text: '主页',
-        },
-        {
-          pagePath: 'pages/index/main',
-          text: '分类',
+          text: '商品详情页',
         },
         {
           pagePath: 'pages/demo/main',
           text: '购物车',
         },
         {
-          pagePath: 'pages/index/main',
+          pagePath: 'pages/my/main',
           text: '我的',
         },
       ],
