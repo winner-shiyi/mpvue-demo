@@ -1,0 +1,188 @@
+// Set classes namespace, e.g. `bus-`
+$namespace: null !default;
+
+$base-font-size: 12px !default;
+
+$base-line-height: 1.5 !default;
+
+// Define default font weights
+$font-weight-normal: normal !default;
+$font-weight-bold: bold !default;
+
+// Application font-size 
+$font-size-xs: 12px !default;
+$font-size-sm: 14px !default;
+$font-size-default: 16px !default;
+$font-size-lg: 18px !default;
+$font-size-xl: 20px !default;
+$font-size-xxl: 24px !default;
+
+$black: #000 !default;
+$white: #fff !default;
+
+// Application Colors
+$global-primary: #CCAA66 !default; // latest
+$global-secondary: #CDAC69 !default;
+$global-success: #5eb95e !default;
+$global-warning: #F37B1D !default;
+$global-error: #dd514c !default;
+
+$gray-darker: #222 !default; // lighten($black, 13.5%) !default
+$gray-dark: #333 !default; // lighten($black, 20%) !default
+$gray: #555 !default; // black, 33.5%) !default
+$gray-light: #aaa !default; // 按钮置灰背景或者删除按钮背景灰
+$gray-lighter: #ccc !default; // 按钮置灰背景
+
+$global-radius: 4px !default;
+$global-radius-xs: 2px !default;
+
+$bus-radius: (
+    radius: $global-radius,
+    radiusxs: $global-radius-xs
+);
+
+// 块间距设置
+$global-padding: 16px !default;
+$global-padding-big: 20px !default;
+$gloabl-margin: 16px !default;
+$global-spacing: 15px !default;
+
+
+// Font-families 
+// @see https://www.smashingmagazine.com/2015/11/using-system-ui-fonts-practical-guide/
+$font-family-sans-serif: /* 1 */ -apple-system, BlinkMacSystemFont,
+  /* 2 */ "PingFang SC", "Hiragino Sans GB", "Segoe UI", "Microsoft YaHei", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "wenquanyi micro hei",
+  /* 3 */ "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+
+// z-index
+$z-index-view-top: 20 !default;
+$z-index-view-bottom: $z-index-view-top -10 !default; 
+
+$z-index-base: 1000 !default;
+$z-index-modal: $z-index-base + 10 !default;
+$z-index-notification: $z-index-base + 100 !default;
+$z-index-popover: $z-index-base + 30 !default;
+
+// Base
+// -----------------------------------------------------------------------------
+$body-background: #f4f4f4 !default;
+$body-font-color: $gray-dark !default;
+$body-font-family: $font-family-sans-serif;
+$body-font-weight: $font-weight-normal !default;
+$body-font-style: normal !default;
+
+// Button Variables
+// -----------------------------------------------------------------------------
+$button-prfix: #{$namespace}btn !default;
+$button-padding: 0 0  !default;
+$button-margin: 0 $global-padding $global-padding 0 !default;
+$button-style: solid !default;
+$button-background: $gray-lighter !default;
+$button-background-active: $global-primary !default;
+$button-radius: 0 !default;
+$button-color: auto !default;
+$button-font-size: $font-size-default;
+$button-opacity-disabled: 0.5 !default;
+
+// Container Variables
+// -----------------------------------------------------------------------------
+$container-prefix: #{$namespace}container !default;
+
+// Text fields
+// datetime has been removed from WHATWG HTML
+// @see https://github.com/whatwg/html/issues/336
+$text-field-selectors: 'input[type="text"],
+                        input[type="password"],
+                        input[type="date"],
+                        input[type="datetime"],
+                        input[type="datetime-local"],
+                        input[type="month"],
+                        input[type="week"],
+                        input[type="time"],
+                        input[type="email"],
+                        input[type="tel"],
+                        input[type="url"],
+                        input[type="number"],
+                        input[type="search"],
+                        input[type="color"],
+                        textarea';
+
+$text-filed-color: $gray-dark !default; // #333
+$text-filed-color-hover: $text-filed-color !default;
+$text-filed-color-focus: $text-filed-color !default;
+$text-field-background: #fff !default;
+$text-field-background-hover: $text-field-background !default;
+$text-field-background-focus: $text-field-background !default;
+$text-field-background-disabled: smartscale($text-field-background) !default;
+$text-field-border: #ccc !default;
+$text-field-border-hover: #bbb !default;
+$text-field-border-focus: #999 !default;
+$text-field-cursor-disabled: not-allowed !default;
+
+// Icon Variables
+$icon-prefix: #{namespace}icon !default;
+$icon-font-size: 24px !default;
+
+$icons: (
+  back: \e80a,
+  bars: \e80e,
+  caret: \e80f,
+  check: \e810,
+  close: \e811,
+  code: \e812,
+  compose: \e813,
+  download: \e815,
+  edit: \e829,
+  forward: \e82a,
+  gear: \e821,
+  home: \e82b,
+  info: \e82c,
+  list: \e823,
+  more-vertical: \e82e,
+  more: \e82f,
+  pages: \e824,
+  pause: \e830,
+  person: \e832,
+  play: \e816,
+  plus: \e817,
+  refresh: \e825,
+  search: \e819,
+  share: \e81a,
+  sound: \e827,
+  sound2: \e828,
+  sound3: \e80b,
+  sound4: \e80c,
+  star-filled: \e81b,
+  star: \e81c,
+  stop: \e81d,
+  trash: \e81e,
+  up-nav: \e81f,
+  up: \e80d,
+  right-nav: \e818,
+  right: \e826,
+  down-nav: \e814,
+  down: \e820,
+  left-nav: \e82d,
+  left: \e822
+) !default;
+
+
+// List Variables
+// -----------------------------------------------------------------------------
+$list-prefix: #{$namespace}list !default;
+$item-prefix: #{$namespace}item !default;
+$list-background: $white !default;
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -8,10 +8,10 @@
 
 <script>
 export default {
-  props: ['text'],
-  onShow() {
-    console.log('card----onShow');
-  },
+    props: ['text'],
+    onShow() {
+        console.log('card----onShow');
+    },
 };
 </script>
 

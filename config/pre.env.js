@@ -1,4 +1,4 @@
 module.exports = {
-  NODE_ENV: '"production"',
+  NODE_ENV: '"release"',
   BASE_URL: '""'
 }

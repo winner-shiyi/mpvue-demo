@@ -4,6 +4,7 @@ module.exports = {
   root: true,
   parser: 'babel-eslint',
   parserOptions: {
+    ecmaVersion: 6,
     sourceType: 'module'
   },
   env: {
@@ -11,7 +12,7 @@ module.exports = {
     node: true,
     es6: true
   },
-  extends: 'airbnb-base',
+  extends: 'airbnb-base', 
   // required to lint *.vue files
   plugins: [
     'html'
@@ -37,8 +38,11 @@ module.exports = {
     }],
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
+    'indent': ['error', 4],
     'no-console': 0,
     'linebreak-style': 0,
+    'no-alert': 0,
+    'semi': 0
   },
   globals: {
     App: true,

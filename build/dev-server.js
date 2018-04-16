@@ -1,9 +1,13 @@
 require('./check-versions')()
 
 var config = require('../config')
+
+// console.log(process.env.NODE_ENV, "本地开发环境变量, package,script 没有任何定义，肯定为undefined")
 if (!process.env.NODE_ENV) {
-  process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
+  process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV) // 默认设置为开发环境: development
 }
+
+console.log(process.env.NODE_ENV, "本地开发环境变量")
 
 // var opn = require('opn')
 var path = require('path')
@@ -21,6 +25,7 @@ var autoOpenBrowser = !!config.dev.autoOpenBrowser
 var proxyTable = config.dev.proxyTable
 
 var app = express()
+// console.log(JSON.stringify(webpackConfig.module.rules) , "--------------dev modulesrules")
 var compiler = webpack(webpackConfig)
 
 // var devMiddleware = require('webpack-dev-middleware')(compiler, {

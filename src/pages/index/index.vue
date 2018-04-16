@@ -9,21 +9,21 @@ import card from '@/components/card';
 
 
 export default {
-  data() {
-    return {
-    };
-  },
-
-  components: {
-    card,
-  },
-
-  methods: {
-    onClick() {
-      const url = '../detail/main';
-      wx.navigateTo({ url });
+    data() {
+        return {
+        };
     },
-  },
+
+    components: {
+        card,
+    },
+
+    methods: {
+        onClick() {
+            const url = '../detail/main';
+            wx.navigateTo({ url });
+        },
+    },
 };
 </script>
 

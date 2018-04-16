@@ -1,0 +1,116 @@
+/*
+* @see https://github.com/Tencent/weui
+* Tencent is pleased to support the open source community by making WeUI available.
+* 
+*/
+@import './fn';
+
+page {
+    line-height: 1.6;
+    font-family: $body-font-family;
+}
+
+icon{
+    vertical-align: middle;
+}
+
+
+html {
+    -ms-text-size-adjust: 100%; /* 2 */
+    -webkit-text-size-adjust: 100%; /* 2 */
+}
+
+body {
+    line-height: 1.6;
+    font-family: $body-font-family;
+    font-size: $base-font-size;
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/**
+ * Add the correct display in IE 9-.
+ */
+
+article,
+aside,
+footer,
+header,
+nav,
+hgroup,
+address, 
+figure, 
+figcaption, 
+details,
+section,
+main {
+  display: block;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+caption, th {
+  text-align: left;
+  font-weight: normal;
+}
+
+/**
+ * 1. Add the correct box sizing in Firefox.
+ * 2. Show the overflow in Edge and IE.
+ */
+
+hr {
+  box-sizing: content-box; /* 1 */
+  height: 0; /* 1 */
+  overflow: visible; /* 2 */
+}
+
+li {
+  list-style: none;
+}
+
+a, button {
+  cursor: pointer;
+}
+
+/**
+ * 1. Correct the inheritance and scaling of font size in all browsers.
+ * 2. Correct the odd `em` font sizing in all browsers.
+ */
+
+pre {
+  font-family: inherit; /* 1 */
+}
+
+a img {
+    border: 0;
+}
+
+/**
+ * 1. Remove the gray background on active links in IE 10.
+ * 2. Remove gaps in links underline in iOS 8+ and Safari 8+.
+ */
+a {
+    background-color: transparent; /* 1 */
+  -webkit-text-decoration-skip: objects; /* 2 */
+    text-decoration: none;
+    @include setTapColor();
+}
+
+img {
+  // Grid Defaults to get images and embeds to work properly
+  max-width: 100%;
+  height: auto;
+  -ms-interpolation-mode: bicubic;
+
+  // Get rid of gap under images by making them display: inline-block; by default
+  display: inline-block;
+  vertical-align: middle;
+}

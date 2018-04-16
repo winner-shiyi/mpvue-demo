@@ -28,60 +28,60 @@ import card from '@/components/card';
 
 
 export default {
-  data() {
-    return {
-      motto: 'Hello World',
-      userInfo: {},
-    };
-  },
-
-  components: {
-    card,
-  },
-
-  methods: {
-    bindViewTap() {
-      const url = '../logs/main';
-      wx.navigateTo({ url });
+    data() {
+        return {
+            motto: 'Hello World',
+            userInfo: {},
+        };
     },
-    bindDemoTep() {
-      const url = '../demo/main';
-      wx.navigateTo({ url });
+
+    components: {
+        card,
     },
-    getUserInfo() {
-      // 调用登录接口
-      wx.login({
-        success: () => {
-          wx.getUserInfo({
-            success: (res) => {
-              this.userInfo = res.userInfo;
-            },
-          });
+
+    methods: {
+        bindViewTap() {
+            const url = '../logs/main';
+            wx.navigateTo({ url });
         },
-      });
+        bindDemoTep() {
+            const url = '../demo/main';
+            wx.navigateTo({ url });
+        },
+        getUserInfo() {
+        // 调用登录接口
+            wx.login({
+                success: () => {
+                    wx.getUserInfo({
+                        success: (res) => {
+                            this.userInfo = res.userInfo;
+                        },
+                    });
+                },
+            });
+        },
     },
-  },
 
-  created() {
-    // 调用应用实例的方法获取全局数据
-    this.getUserInfo();
-    console.log('my页面');
-    this.$post('user/login', { name: 'weina' }).then((res) => {
-      console.log('res11111----', res);
-    });
-    // this.$PromiseAjax('user/login', { name: 'weina' }).then((res) => {
-    //   console.log('res2222----', res);
-    // });
-  },
-  onLoad() {
-    console.log('onLoad');
-  },
-  onShow() {
-    console.log('onShow');
-  },
-  mounted() {
-    console.log('mounted');
-  },
+    created() {
+        // 调用应用实例的方法获取全局数据
+        this.getUserInfo();
+        console.log('my页面');
+        this.$post('user/login', { name: 'weina' }).then((res) => {
+            console.log('res11111----', res);
+        });
+        // this.$PromiseAjax('user/login', { name: 'weina' }).then((res) => {
+        //   console.log('res2222----', res);
+        // });
+    },
+    onLoad() {
+        console.log('onLoad');
+    },
+    onShow() {
+        console.log('onShow');
+    },
+    mounted() {
+        console.log('mounted');
+    },
 };
 </script>
 

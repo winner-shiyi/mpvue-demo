@@ -6,6 +6,8 @@ var vueLoaderConfig = require('./vue-loader.conf')
 var MpvuePlugin = require('webpack-mpvue-asset-plugin')
 var glob = require('glob')
 
+// console.log(vueLoaderConfig, "vueLoaderConfig 配置信息")
+
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
@@ -41,7 +43,10 @@ module.exports = {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue': 'mpvue',
-      '@': resolve('src')
+      '@': resolve('src'),
+      'style': path.resolve(__dirname, '../src/style'),
+      "components": path.resolve(__dirname,'../src/components'),
+      "utils": path.resolve(__dirname,'../src/utils')
     },
     symlinks: false
   },
@@ -51,7 +56,7 @@ module.exports = {
         test: /\.(js|vue)$/,
         loader: 'eslint-loader',
         enforce: 'pre',
-        include: [resolve('src'), resolve('test')],
+        include: [resolve('src'), resolve('test')], // test 暂时
         options: {
           formatter: require('eslint-friendly-formatter')
         }
@@ -87,7 +92,7 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: utils.assetsPath('media/[name]].[ext]')
+          name: utils.assetsPath('media/[name].[ext]')
         }
       },
       {
@@ -104,3 +109,4 @@ module.exports = {
     new MpvuePlugin()
   ]
 }
+

@@ -1,0 +1,345 @@
+// Clearfix
+// @see http://nicolasgallagher.com/micro-clearfix-hack/
+@mixin clearfix {
+  /**
+  * For IE 6/7 only
+  * Include this rule to trigger hasLayout and contain floats.
+  */
+  zoom: 1;
+
+  &:before,
+  &:after {
+  /**
+   * For modern browsers
+   * 1. The space content is one way to avoid an Opera bug when the
+   *    contenteditable attribute is included anywhere else in the document.
+   *    Otherwise it causes space to appear at the top and bottom of elements
+   *    that are clearfixed.
+   * 2. The use of `table` rather than `block` is only necessary if using
+   *    `:before` to contain the top-margins of child elements.
+   */
+    content: " ";
+    display: table;
+  }
+  
+  // IE8以上和非IE浏览器才支持:after
+  &:after {
+    clear: both;
+  }
+
+  // &:after {
+  //   display: block;
+  //   clear: both;
+  //   height: 0;
+  //   visibility: hidden;
+  //   overflow: hidden;
+  //   content: ' ';
+  // }
+}
+
+@mixin setTapColor($c: rgba(0,0,0,0)) {
+    -webkit-tap-highlight-color: $c;
+}
+
+// Sizing
+// -----------------------------------------------------------------------------
+// 设置固定的宽度和高度
+@mixin size($width, $height) {
+  width: $width;
+  height: $height;
+}
+
+// 设置固定的宽度(高度和宽度相同时)
+@mixin square($size) {
+  @include size($size, $size);
+}
+
+// TODO: add scrollableX & scrollableY
+// @see https://developer.mozilla.org/zh-CN/docs/Web/CSS/-webkit-overflow-scrolling
+@mixin scrollable() {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch; // for Mobile 不建议使用此特性，未在规范中.
+}
+
+// Text
+// -----------------------------------------------------------------------------
+
+// Text overflow
+// Requires inline-block or block for proper styling
+@mixin ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+// Line clamp
+// http://dropshado.ws/post/1015351370/webkit-line-clamp
+@mixin ellipsisLn($lines: 2, $line-height: 18px) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines; // number of lines to show
+  line-height: $line-height;
+  max-height: $line-height * $lines;
+}
+
+// auto new line 
+@mixin text_wrap() {
+    word-wrap:break-word;
+    word-break:break-all;
+}
+
+// Form
+// -----------------------------------------------------------------------------
+
+// Disable OS-level styles 使得系统默认原生样式无效
+// @see http://www.css88.com/book/css/webkit/visual/appearance.htm  ‘none’ 是一般设置的值
+@mixin no-appearance {
+  -webkit-appearance: none; // 去除系统默认appearance的样式,常用于IOS下移除原生样式
+  -moz-appearance: none;
+}
+
+// CSS Opactiy 
+// @see https://www.cnblogs.com/PeunZhang/p/4089894.html
+// @param {number} $opacity - opacity(100 points), default: 50  
+// 1. opacity is not supported IE6,7,8,but IE9 , IE9+, standard browsers. Which can be used for setting childNodes opacity.
+// 2. for IE filter
+// 3. rgba is not supported IE6,7,8,but IE9 , IE9+, standard browsers. Which can be used for background-color、color、box-shadow.  
+// 4. IE6/IE7 haslayout 
+@mixin opacity( $opacity:50 ) {
+  opacity: $opacity / 100; /* 1 */
+  filter: alpha(opacity = $opacity); /* 2 */
+  *zoom: 1; /* 4 */ 
+  background: rgba(0, 0, 0, $opacity / 100); /* 3 */
+}
+
+// Shape
+// -----------------------------------------------------------------------------
+/// CSS Triangle
+/// Creates a CSS triangle, which can be used for dropdown arrows, popup tails, and more. Use this mixin inside a `&::before` or `&::after` selector, to attach the triangle to an existing element.
+///
+/// @param {number} $triangle-size - Width of the triangle.
+/// @param {color} $triangle-color - Color of the triangle.
+/// @param {keyword} $triangle-direction - Direction the triangle points. Can be `top`, `right`, `bottom`, or `left`.
+@mixin set-arrow($triangle-size, $triangle-color, $triangle-direction) {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  border: inset $triangle-size;
+  @if ($triangle-direction == top) {
+    border-color: $triangle-color transparent transparent transparent;
+    border-top-style: solid;
+  }
+  @if ($triangle-direction == bottom) {
+    border-color: transparent transparent $triangle-color transparent;
+    border-bottom-style: solid;
+  }
+  @if ($triangle-direction == left) {
+    border-color: transparent transparent transparent $triangle-color;
+    border-left-style: solid;
+  }
+  @if ($triangle-direction == right) {
+    border-color: transparent $triangle-color transparent transparent;
+    border-right-style: solid;
+  }
+}
+
+
+// Retina hairline
+// @see http://dieulot.net/css-retina-hairline
+// -----------------------------------------------------------------------------
+$rl-pseudo-element: (
+  top: before,
+  right: after,
+  bottom: after,
+  left: before,
+);
+
+@mixin rl-get-size($position) {
+  @if ($position == top or $position == bottom) {
+    @include size(100%, 1px);
+  } @else {
+    @include size(1px, 100%);
+  }
+}
+
+// simulate a 1px border on retina screens
+@mixin rl-get-scale($position) {
+  @if ($position == top or $position == bottom) {
+    @extend %retina-line-v-scale;
+  } @else {
+    @extend %retina-line-h-scale;
+  }
+}
+
+// @param {top|right|bottom|left} $position - line position
+// @param {before|after} $element - pseudo element
+// @param {String} $color - border color
+@mixin retina-line($position: top, $element: before, $color: #d8d8d8) {
+  $transform-origin-map: (
+    top: 50% 0,
+    right: 100% 50%,
+    bottom: 50% 100%,
+    left: 0 50%,
+  );
+
+  position: relative; // 改进 不用在外层业务样式代码中大量写: position: relative
+
+  &:#{$element} {
+    content: "";
+    position: absolute;
+
+    @if ($position == top or $position == left) {
+      top: 0;
+      left: 0;
+      bottom: auto;
+      right: auto;
+    } @else if ($position == right) {
+      top: 0;
+      right: 0;
+      bottom: auto;
+      left: auto;
+    } @else if ($position == bottom) {
+      top: auto;
+      right: auto;
+      bottom: 0;
+      left: 0;
+    }
+
+    z-index: 15;
+    display: block;
+    box-sizing: content-box;
+    background-color: transparent; // $color;
+    // fixes Android rending: 1px width scale(0.5) not work well on Android
+    border-#{$position}: 1px solid $color;
+    @include rl-get-size($position);
+    transform-origin: map_get($transform-origin-map, $position);
+    @include rl-get-scale($position);
+  }
+}
+
+// need not be used
+@mixin retina-line-color($element, $color) {
+  &:#{$element} {
+    border-color: $color;
+  }
+}
+
+// need not be used
+@mixin retina-line-remove($element) {
+  &:#{$element} {
+    display: none;
+  }
+}
+
+// CSS3
+// -----------------------------------------------------------------------------
+ 
+// prefixer
+// 用于在属性上加前缀
+// 默认这里将只输出webkit前缀和标准（如果要开启opera的可以将$prefixForOpera设置为true）
+//-----------------------------------------------------
+@mixin prefixer($property, $value, $prefixes: o webkit) {
+  @each $prefix in $prefixes {
+    @if $prefix == webkit and $prefixForWebkit == true {
+      -webkit-#{$property}: $value;
+    }
+    @else if $prefix == moz and $prefixForMozilla == true {
+      -moz-#{$property}: $value;
+    }
+    @else if $prefix == ms and $prefixForMicrosoft == true {
+      -ms-#{$property}: $value;
+    }
+    @else if $prefix == o and $prefixForOpera == true {
+      -o-#{$property}: $value;
+    }
+  }
+  @if $prefixNo {
+    #{$property}: $value;
+  }
+}
+
+
+// CSS3 border-radius
+// TODO: IE6, IE7, IE8, IE9 realize border-radius style. IE6,7,8,9 not supported border-raidus
+@mixin border-radius( $radius: $global-radius ) {
+  -ms-border-radius: $radius;
+  -o-border-radius: $radius;
+  -webkit-border-radius: $radius;
+  border-radius: $radius;
+}
+
+// border-image
+// http://border-image.com/
+@mixin border-image($image){
+  border-image: $image;
+}
+
+@mixin box-shadow($shadow...) {
+  box-shadow: $shadow;
+}
+
+
+
+@mixin force-hardware-acceleration {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
+}
+
+// Flex layout 
+// used for two(or more) columns which is the same width.
+@mixin flex-between ($direction: row) {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+@mixin flex-align-items ($align-item: center) {
+  align-items: $align-item;
+}
+
+@mixin flex-justify-content ($justify-content: center) {
+  justify-content: $justify-content;
+}
+
+
+@mixin flex-center-vertical {
+  display: flex;
+  @include flex-align-items();
+  @include flex-justify-content();
+}
+
+@mixin center-vertical {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -50%; 
+    margin-left: -50%;
+}
+
+@mixin center-vertical-css3 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0);
+}
+
+// button or menu height
+// @param {string} $height - button or menu height
+// @param {string} $$color - background color
+@mixin btn-css ($height: 48px, $color: $global-primary ) {
+  background: $color;
+  height: $height;
+  line-height: $height;
+}
+
+
+
+

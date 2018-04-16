@@ -27,70 +27,68 @@
 <script>
 
 import card from '@/components/card';
-import mptoast from 'mptoast';
 
 
 export default {
-  data() {
-    return {
-      motto: '我是购物车页面',
-      userInfo: {},
-      items: [
-        { name: 'USA', value: '美国' },
-        { name: 'CHN', value: '中国', checked: 'true' },
-        { name: 'BRA', value: '巴西' },
-        { name: 'JPN', value: '日本' },
-        { name: 'ENG', value: '英国' },
-        { name: 'TUR', value: '法国' },
-      ],
-    };
-  },
+    data() {
+        return {
+            motto: '我是购物车页面',
+            userInfo: {},
+            items: [
+                { name: 'USA', value: '美国' },
+                { name: 'CHN', value: '中国', checked: 'true' },
+                { name: 'BRA', value: '巴西' },
+                { name: 'JPN', value: '日本' },
+                { name: 'ENG', value: '英国' },
+                { name: 'TUR', value: '法国' },
+            ],
+        };
+    },
 
-  components: {
-    card,
-    mptoast,
-  },
+    components: {
+        card,
+    },
 
-  methods: {
-    checkboxChange(e) {
-      console.log('checkbox发生change事件，携带value值为：', e);
-    },
-    wxtoast() {
-      wx.showToast({
-        title: '我是微信自带提示1234567',
-        icon: 'none',
-      });
-    },
-    showToast() {
-      this.$mptoast('我是提示信息');
-    },
-    bindViewTap() {
-      const url = '../logs/main';
-      wx.navigateTo({ url });
-    },
-    getUserInfo() {
-      // 调用登录接口
-      wx.login({
-        success: () => {
-          wx.getUserInfo({
-            success: (res) => {
-              this.userInfo = res.userInfo;
-            },
-          });
+    methods: {
+        checkboxChange(e) {
+            console.log('checkbox发生change事件，携带value值为：', e);
         },
-      });
+        wxtoast() {
+            wx.showToast({
+                title: '我是微信自带提示1234567',
+                icon: 'none',
+            });
+        },
+        showToast() {
+            this.$mptoast('我是提示信息');
+        },
+        bindViewTap() {
+            const url = '../logs/main';
+            wx.navigateTo({ url });
+        },
+        getUserInfo() {
+            // 调用登录接口
+            wx.login({
+                success: () => {
+                    wx.getUserInfo({
+                        success: (res) => {
+                            this.userInfo = res.userInfo;
+                        },
+                    });
+                },
+            });
+        },
+        clickHandle(msg, ev) {
+            console.log('clickHandle11:', msg);
+            console.log('clickHandle33:', ev);
+        },
     },
-    clickHandle(msg, ev) {
-      console.log('clickHandle11:', msg);
-      console.log('clickHandle33:', ev);
-    },
-  },
 
-  created() {
-    console.log('demo页面');
-    // 调用应用实例的方法获取全局数据
-    this.getUserInfo();
-  },
+    created() {
+        console.log('demo页面');
+        // 调用应用实例的方法获取全局数据
+        this.getUserInfo();
+    },
 };
 </script>
 

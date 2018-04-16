@@ -10,6 +10,7 @@ exports.assetsPath = function (_path) {
 }
 
 exports.cssLoaders = function (options) {
+  // console.log("cssLoader-----------:", options)
   options = options || {}
 
   var cssLoader = {
@@ -76,7 +77,9 @@ exports.cssLoaders = function (options) {
 exports.styleLoaders = function (options) {
   var output = []
   var loaders = exports.cssLoaders(options)
+  // console.log(loaders, "------------styleLoaders")
   for (var extension in loaders) {
+    // console.log(extension, "--------extension")
     var loader = loaders[extension]
     output.push({
       test: new RegExp('\\.' + extension + '$'),

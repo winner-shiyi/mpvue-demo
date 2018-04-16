@@ -9,7 +9,21 @@ var CopyWebpackPlugin = require('copy-webpack-plugin')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 
-var env = config.build.env
+var argvs = require('yargs').argv
+var argvs_env = String(argvs.e) || 'production'
+
+var env = {}
+if(argvs_env == 'development') {
+  env = config.dev.env
+}else if(argvs_env == 'testing') {
+  env = require("../config/test.env")
+}else if(argvs_env == 'release') {
+  env = require("../config/pre.env")
+}else if(argvs_env == 'production') {
+  env = config.build.env
+}
+
+console.log(process.env.NODE_ENV, "服务器环境变量")
 
 var webpackConfig = merge(baseWebpackConfig, {
   module: {
