@@ -36,7 +36,9 @@
         <split></split>
         <view class="infos-content">
             <div class="infos-title">
-                <h1>商品详情</h1>
+                <span class="icon">=</span>
+                <span class="title">商品详情</span>
+                <span class="icon">=</span>
             </div>
             <ul class="infos-des-list">
                 <li class="item" v-for="(desItem, desIndex) in good. goodsDetails" :key="desIndex">
@@ -52,7 +54,7 @@
             <div class="cart-bar">
                 <div class="cart-icon">
                     <image class="icon" src="http://m.neosjyx.com/res/cart.9b748d5e.png" mode="aspectFit"/>
-                    <div class="num">28</div>
+                    <div :class="calcCartClass" >{{calcCartCount}}</div>
                 </div>
                 <div class="cart-text">
                     <!-- <loading></loading> -->
@@ -112,6 +114,7 @@ export default {
                     'http://res.neosjyx.com/resource/images/wechat/7043/editor/20180409104755932209.jpg',
                 ],
             },
+            cartCount: 100,
         };
     },
 
@@ -122,6 +125,12 @@ export default {
     computed: {
         showSingleCel() {
             return this.good.cells.length === 1 ? 'true' : false;
+        },
+        calcCartCount() {
+            return this.cartCount > 99 ? '99+' : this.cartCount;
+        },
+        calcCartClass() {
+            return this.cartCount > 9 ? 'num max99' : 'num'
         },
     },
     methods: {
@@ -261,6 +270,7 @@ export default {
         .cart-icon{
             position: relative;
             width: 75px;
+            height: 100%;
             flex: 0 0 75px;
             text-align: center;
             .icon{
@@ -269,9 +279,18 @@ export default {
             }
             .num{
                 position: absolute;
-                top: 5px;
+                top: 0;
                 right: 20px;
+                width: 20px;
+                height: 20px;
+                line-height: 20px;
+                border-radius: 50%;
                 font-size: 12px;
+                background:red;
+            }
+            .max99{
+                padding: 0 10px;
+                border-radius: 5px;
             }
         }
         .cart-text{
