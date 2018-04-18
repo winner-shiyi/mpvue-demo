@@ -4,6 +4,9 @@
             <div class="sku-head">
 
             </div> 
+            <div class="sku-ul">
+                
+            </div>
             <image class="close" src="/static/img/detail/close@3x.png" @click="hidePanel"/>
 
         </div>
