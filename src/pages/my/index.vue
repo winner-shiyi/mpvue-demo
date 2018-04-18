@@ -67,7 +67,7 @@ export default {
         this.getUserInfo();
         console.log('my页面');
         this.$post('user/login', { name: 'weina' }).then((res) => {
-            console.log('res11111----', res);
+            console.log('resmy----', res);
         });
         // this.$PromiseAjax('user/login', { name: 'weina' }).then((res) => {
         //   console.log('res2222----', res);

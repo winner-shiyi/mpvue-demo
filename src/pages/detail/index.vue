@@ -2,34 +2,32 @@
   <view class="goods-detail-container">
     <view class="goods-detail-content" v-if="!loadingHidden">
        <swiper indicator-dots="true" autoplay="true" class="swiper">
-            <block v-for="(item, index) in bannerArr" :key="index">
+            <block v-for="(item, index) in goodData.headImageList" :key="index">
                 <swiper-item class="banner-item" bindtap="onProductsItemTap" dataId="item.id">
-                    <image class="item-image" :src="item.url" mode="aspectFill" />
+                    <image class="item-image" :src="item" mode="aspectFill" />
                 </swiper-item>
             </block>
         </swiper>
         <view class="desc-content">
-            <view class="title">{{good.title}}</view>
-            <view class="sub-title">{{good.subtittle}}</view>
+            <view class="title">{{goodData.spuName}}</view>
+            <view class="sub-title">{{goodData.subTitle}}</view>
             <view class="price-content">
                 <div class="price-now">
                    <span class="rmb">￥</span> 
-                   <span class="price">{{good.price}}</span>
+                   <span class="price">{{goodData.sellingPrices}}</span>
                 </div>
-                <div class="price-old"></div>
             </view>
         </view>
         <split>
             <!-- <h1 class="hh-slot" style="display: none">我是默认slot1111</h1> -->
         </split>
-        <view class="cells-content">
+        <view class="cells-content" @click="showPanel">
             <div class="cells-title">规格数量选择：</div>
-            <div class="single-cell-str" v-if="showSingleCel">{{good.cells[0]}}</div>
+            <div class="single-cell-str" v-if="showSingleCel">
+                已选择{{goodData.specList[0].valueList[0].specValue}}，{{goodCount}}件
+            </div>
             <div class="multi-cell-content" v-if="!showSingleCel">
                 <span>请选择规格</span>
-                <!-- <div class="multi-cell-ul">
-                    规格数量选择活动面板
-                </div> -->
             </div>
             <image class="r-arrow" src="http://m.neosjyx.com/res/right.7cbb4a37.png" mode="aspectFit"/>
         </view>
@@ -41,27 +39,28 @@
                 <span class="icon">=</span>
             </div>
             <ul class="infos-des-list">
-                <li class="item" v-for="(desItem, desIndex) in good. goodsDetails" :key="desIndex">
+                <li class="item" v-for="(desItem, desIndex) in goodData.goodsDetails" :key="desIndex">
                     <span class="key">{{desItem.key}}：</span>
                     <span class="value">{{desItem.value}}</span>
                 </li>
             </ul>
             <div class="img-list">
-                <image :src="imgItem" v-for="(imgItem, imgIndex) in good.detailImageList" :key="imgIndex" mode="aspectFit" />
+                <image :src="imgItem" v-for="(imgItem, imgIndex) in goodData.detailImageList" :key="imgIndex" mode="aspectFit" />
             </div>
         </view>
         <view class="cart-bar-content">
             <div class="cart-bar">
-                <div class="cart-icon">
+                <div class="cart-icon" @click="goToCart">
                     <image class="icon" src="http://m.neosjyx.com/res/cart.9b748d5e.png" mode="aspectFit"/>
                     <div :class="calcCartClass" >{{calcCartCount}}</div>
                 </div>
-                <div class="cart-text">
+                <div class="cart-text" @click="addToCart">
                     <!-- <loading></loading> -->
                     <span>加入购物车</span>
                 </div>
             </div>
         </view>
+        <skupanel ref="skupanelaa" :fold="fold" v-show="showPanel" @close="closePanel"></skupanel>
     </view>
     <loading v-if="loadingHidden">
         加载中...
@@ -72,6 +71,7 @@
 <script>
 import card from '@/components/card';
 import split from '@/components/split';
+import skupanel from '@/components/skupanel';
 
 
 export default {
@@ -88,43 +88,23 @@ export default {
                     url: 'http://res.neosjyx.com/resource/images/photo/7043/20180409/201804090930180.jpg',
                 },
             ],
-            good: {
-                title: '台湾树上熟是的根深蒂固十多个是的根深蒂固是的金钻ID房d间号凤梨1个装 单果约1150g',
-                subtittle: '绵嫩无渣 鲜甜香滑',
-                price: '29.8',
-                cells: [
-                    '1150g*1',
-                    '2150g*1',
-                ],
-                goodsDetails: [
-                    {
-                        key: '品牌',
-                        value: '生鲜',
-                    },
-                    {
-                        key: '产地',
-                        value: '台湾',
-                    },
-                    {
-                        key: '保质期',
-                        value: '7天',
-                    },
-                ],
-                detailImageList: [
-                    'http://res.neosjyx.com/resource/images/wechat/7043/editor/20180409104755932209.jpg',
-                ],
+            goodData: {
+                specList: [],
             },
+            fold: true,
+            goodCount: 1,
             cartCount: 100,
         };
     },
-
     components: {
         card,
         split,
+        skupanel,
     },
     computed: {
         showSingleCel() {
-            return this.good.cells.length === 1 ? 'true' : false;
+            return this.goodData.specList.length === 1
+                && this.goodData.specList[0].valueList.length === 1 ? 'true' : false;
         },
         calcCartCount() {
             return this.cartCount > 99 ? '99+' : this.cartCount;
@@ -138,17 +118,39 @@ export default {
             const url = '../logs/main';
             wx.navigateTo({ url });
         },
+        addToCart() {
+            if (this.showSingleCel) {
+                // 1、如果是单规格的话，直接调用接口，成功的话，toast提示加入购物车成功
+            } else {
+                 // 2、如果是多规格的话,总是弹起规格面板
+                // this.fold = false;
+                this.showPanel();
+            }
+            // console.log(this.$refs.skupanelaa);
+            // this.$refs.skupanelaa.show();
+        },
+        goToCart() {
+            const url = '../logs/main';
+            wx.navigateTo({ url });
+        },
+        closePanel() {
+            this.fold = true;
+        },
+        showPanel() {
+            this.fold = false;
+        },
     },
 
     created() {
-        // 调用应用实例的方法获取全局数据
-        console.log('index页面');
-        this.$post('user/login', { name: 'weina' }).then((res) => {
-            console.log('res11111----', res);
+        const param = {
+            shopId: '',
+            spuId: '',
+        }
+        console.log('detail页面');
+        this.$post('spuDetail', param).then((data) => {
+            console.log('resdetail----', data);
+            this.goodData = data;
         });
-        // this.$PromiseAjax('user/login', { name: 'weina' }).then((res) => {
-        //   console.log('res2222----', res);
-        // });
     },
     onLoad() {
         console.log('onLoad');
