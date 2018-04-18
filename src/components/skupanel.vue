@@ -1,21 +1,50 @@
 <template>
     <view class="sku-panel">
-        <div class="sku-panel-content" v-show="!fold">
+        <div class="sku-panel-content" v-show="status">
             <div class="sku-head">
-
+                <div class="img">
+                    <image class="sm-img" src="http://res.neosjyx.com/resource/images/photo/7043/20180313/201803131732060.jpg" mode="aspectFit"/>
+                </div>
+                <div class="info">
+                    <div class="price">
+                        ￥16.9
+                    </div>
+                    <div class="select">已选：200g，热带水果味</div>
+                </div>
             </div> 
-            <div class="sku-ul">
-                
+            <div class="sku-content">
+                <ul class="sku-ul">
+                    <li class="sku-item">
+                        <div class="name">规格</div>
+                        <div class="list">
+                            <div class="item active">8支装</div>
+                            <div class="item">16支装</div>
+                            <div class="item lose">32支装</div>
+                        </div>
+                    </li>
+                </ul>
+                <div class="counter-content">
+                    <div class="name">数量</div>
+                    <div class="counter">
+                        <div class="cut">-</div>
+                        <input type="number" class="input" v-model="selectCount">
+                        <div class="add">+</div>
+                    </div>
+                </div>
             </div>
+            <div class="btn">确认</div>
             <image class="close" src="/static/img/detail/close@3x.png" @click="hidePanel"/>
-
         </div>
-        <div class="mask" @click="hidePanel" v-show="!fold"></div>
+        <div class="mask" @click="hidePanel" v-show="status"></div>
     </view>
 </template>
 <script>
     export default {
         props: {
+            value: {
+                type: Boolean,
+                default: false,
+            },
             skuList: {
                 type: Array,
                 default() {
@@ -30,19 +59,25 @@
                     ]
                 },
             },
-            fold: { // 规格面板弹是否折叠
-                type: Boolean,
-                default: true,
-            },
         },
         data() {
             return {
+                status: this.value,
+                selectCount: 1,
             }
         },
-        computed: {
+        watch: {
+            value(val) {
+                this.status = val
+            },
+            status(val) {
+                this.$emit('input', val)
+            },
         },
         methods: {
             hidePanel() {
+                this.status = false
+                // 关闭后的回调
                 this.$emit('close');
             },
         },
@@ -51,6 +86,7 @@
 </script>
 
 <style lang="scss" scoped>
+    $green: #77BA2C;
     .sku-panel{
         .sku-panel-content{
             position: fixed;
@@ -60,12 +96,6 @@
             width: 100%;
             height: 453px;
             background: #fff;
-            .sku-head{
-                position: relative;
-                padding: 16px 0;
-                margin: 0 15px;
-                border-bottom: 1px solid #E5E5E5;
-            }
             .close{
                 position: absolute;
                 top: 15px;
@@ -73,6 +103,112 @@
                 width: 18px;
                 height: 18px;
                 padding: 5px;
+            }
+            .sku-head{
+                display: flex;
+                position: relative;
+                padding: 16px 0;
+                margin: 0 15px;
+                border-bottom: 1px solid #E5E5E5;
+                .img{
+                    width: 80px;
+                    height: 80px; 
+                    border: 1px solid #ccc;
+                }
+                .sm-img{
+                    width: 80px;
+                    height: 80px;
+                }
+                .info{
+                    padding-top: 16px;
+                    margin-left: 16px;
+                    .price{
+                        font-size: 24px;
+                        color: #FF6500;
+                        line-height: 32px;
+                    }
+                    .select{
+                        font-size: 14px;
+                        color: #333;
+                        line-height: 22px;
+                    }
+                }
+            }
+            .sku-content{
+                // height: ;
+                overflow-y: scroll;
+                padding: 15px;
+                box-sizing: border-box;
+                .sku-item{
+                    padding-bottom: 10px;
+                    .list{
+                        display: flex;
+                    }
+                    .item{
+                        padding: 5px 15px;
+                        border: 1px solid #bbb;
+                        border-radius: 4px;
+                        font-size: 14px;
+                        color: #333;
+                        text-align: center;
+                        line-height: 20px; 
+                        margin: 0 10px 10px 0;
+                        &.active{
+                            border-color: $green;
+                            color: $green;
+                        }
+                        &.lose{
+                            color: #ccc;
+                            border: none;
+                            background: #E5E5E5;
+                        }
+                    }
+                }
+                .name{
+                    font-size: 12px;
+                    color: #959595;
+                    line-height: 20px;
+                    margin-bottom: 5px;
+                }
+                .counter{
+                    display: flex;
+                    width: 138px;
+                    box-sizing: border-box;
+                    height: 30px;
+                    line-height: 30px;
+                    border: 1px solid #bbb;
+                    border-radius: 4px;
+                    font-size: 14px;
+                    color: #333;
+                    .cut,.add{
+                        width: 36px;
+                        flex: 0 0 36px;
+                        text-align: center;
+                        font-size: 22px;
+                    }
+                    .cut{
+                        border-right: 1px solid #bbb;
+                    }
+                    .add{
+                         border-left: 1px solid #bbb;
+                    }
+                    .input{
+                        flex: 1;
+                        text-align: center;
+                    }
+                }
+            }
+            .btn{
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 49px;
+                line-height: 49px;
+                text-align: center;
+                background: $green;
+                font-size: 17px;
+                color: #fff;
             }
         }
         .mask{

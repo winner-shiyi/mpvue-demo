@@ -60,7 +60,9 @@
                 </div>
             </div>
         </view>
-        <skupanel ref="skupanelaa" :fold="fold" v-show="showPanel" @close="closePanel"></skupanel>
+        <view class="wrap-sku-panel">
+            <skupanel v-model="showPanelStatus"></skupanel>
+        </view>
     </view>
     <loading v-if="loadingHidden">
         加载中...
@@ -94,6 +96,8 @@ export default {
             fold: true,
             goodCount: 1,
             cartCount: 100,
+            // 显示或隐藏面板
+            showPanelStatus: false,
         };
     },
     components: {
@@ -114,10 +118,6 @@ export default {
         },
     },
     methods: {
-        onProductsItemTap() {
-            const url = '../logs/main';
-            wx.navigateTo({ url });
-        },
         addToCart() {
             if (this.showSingleCel) {
                 // 1、如果是单规格的话，直接调用接口，成功的话，toast提示加入购物车成功
@@ -133,11 +133,8 @@ export default {
             const url = '../logs/main';
             wx.navigateTo({ url });
         },
-        closePanel() {
-            this.fold = true;
-        },
         showPanel() {
-            this.fold = false;
+            this.showPanelStatus = true;
         },
     },
 
