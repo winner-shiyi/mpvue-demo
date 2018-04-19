@@ -3,32 +3,32 @@
         <div class="sku-panel-content" v-show="status">
             <div class="sku-head">
                 <div class="img">
-                    <image class="sm-img" src="http://res.neosjyx.com/resource/images/photo/7043/20180313/201803131732060.jpg" mode="aspectFit"/>
+                    <image class="sm-img" src="http://res.neosjyx.com/resource/images/photo/7043/20180313/201803131732060.jpg"/>
                 </div>
                 <div class="info">
-                    <div class="price">
-                        ￥16.9
-                    </div>
+                    <div class="price">￥16.9</div>
                     <div class="select">已选：200g，热带水果味</div>
                 </div>
             </div> 
             <div class="sku-content">
                 <ul class="sku-ul">
-                    <li class="sku-item">
-                        <div class="name">规格</div>
+                    <li class="sku-item" v-for="(specItem, specIndex) in specList" :key="specIndex">
+                        <div class="name">{{specItem.specName}}</div>
                         <div class="list">
-                            <div class="item active">8支装</div>
-                            <div class="item">16支装</div>
-                            <div class="item lose">32支装</div>
+                            <div class="item active"
+                                v-for="(valueItem, valueIndex) in specItem.valueList" :key="valueIndex"
+                            >
+                                {{valueItem.specValue}}
+                            </div>
+                            <!-- <div class="item">16支装</div>
+                            <div class="item lose">32支装</div> -->
                         </div>
                     </li>
                 </ul>
                 <div class="counter-content">
                     <div class="name">数量</div>
                     <div class="counter">
-                        <div class="cut">-</div>
-                        <input type="number" class="input" v-model="selectCount">
-                        <div class="add">+</div>
+                        <cartcontrol></cartcontrol>
                     </div>
                 </div>
             </div>
@@ -39,6 +39,8 @@
     </view>
 </template>
 <script>
+    import cartcontrol from '@/components/cartcontrol';
+
     export default {
         props: {
             value: {
@@ -59,11 +61,21 @@
                     ]
                 },
             },
+            specList: {
+                type: Array,
+                default() {
+                    return [
+                        {
+                            specName: '',
+                            valueList: [],
+                        },
+                    ]
+                },
+            },
         },
         data() {
             return {
                 status: this.value,
-                selectCount: 1,
             }
         },
         watch: {
@@ -81,6 +93,9 @@
                 this.$emit('close');
             },
         },
+        components: {
+            cartcontrol,
+        },
 
     };
 </script>
@@ -94,7 +109,8 @@
             left: 0;
             z-index: 20;
             width: 100%;
-            height: 453px;
+            // height: 453px;
+            padding-bottom: 49px;
             background: #fff;
             .close{
                 position: absolute;
@@ -113,11 +129,10 @@
                 .img{
                     width: 80px;
                     height: 80px; 
-                    border: 1px solid #ccc;
                 }
                 .sm-img{
-                    width: 80px;
-                    height: 80px;
+                    width: 100%;
+                    height: 100%;
                 }
                 .info{
                     padding-top: 16px;
@@ -135,8 +150,8 @@
                 }
             }
             .sku-content{
-                // height: ;
                 overflow-y: scroll;
+                height: 291px;
                 padding: 15px;
                 box-sizing: border-box;
                 .sku-item{
@@ -153,6 +168,7 @@
                         text-align: center;
                         line-height: 20px; 
                         margin: 0 10px 10px 0;
+                        cursor: pointer;
                         &.active{
                             border-color: $green;
                             color: $green;
@@ -170,33 +186,33 @@
                     line-height: 20px;
                     margin-bottom: 5px;
                 }
-                .counter{
-                    display: flex;
-                    width: 138px;
-                    box-sizing: border-box;
-                    height: 30px;
-                    line-height: 30px;
-                    border: 1px solid #bbb;
-                    border-radius: 4px;
-                    font-size: 14px;
-                    color: #333;
-                    .cut,.add{
-                        width: 36px;
-                        flex: 0 0 36px;
-                        text-align: center;
-                        font-size: 22px;
-                    }
-                    .cut{
-                        border-right: 1px solid #bbb;
-                    }
-                    .add{
-                         border-left: 1px solid #bbb;
-                    }
-                    .input{
-                        flex: 1;
-                        text-align: center;
-                    }
-                }
+                // .counter{
+                //     display: flex;
+                //     width: 138px;
+                //     box-sizing: border-box;
+                //     height: 30px;
+                //     line-height: 30px;
+                //     border: 1px solid #bbb;
+                //     border-radius: 4px;
+                //     font-size: 14px;
+                //     color: #333;
+                //     .cut,.add{
+                //         width: 36px;
+                //         flex: 0 0 36px;
+                //         text-align: center;
+                //         font-size: 22px;
+                //     }
+                //     .cut{
+                //         border-right: 1px solid #bbb;
+                //     }
+                //     .add{
+                //          border-left: 1px solid #bbb;
+                //     }
+                //     .input{
+                //         flex: 1;
+                //         text-align: center;
+                //     }
+                // }
             }
             .btn{
                 position: absolute;

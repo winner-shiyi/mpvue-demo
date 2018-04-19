@@ -1,10 +1,10 @@
 <template>
   <view class="goods-detail-container">
     <view class="goods-detail-content" v-if="!loadingHidden">
-       <swiper indicator-dots="true" autoplay="true" class="swiper">
+       <swiper indicator-dots="true" autoplay="true" indicator-color="rgba(0, 0, 0, .2)" indicator-active-color="#FF6500" class="swiper">
             <block v-for="(item, index) in goodData.headImageList" :key="index">
                 <swiper-item class="banner-item" bindtap="onProductsItemTap" dataId="item.id">
-                    <image class="item-image" :src="item" mode="aspectFill" />
+                    <image class="item-image" :src="item"/>
                 </swiper-item>
             </block>
         </swiper>
@@ -22,21 +22,21 @@
             <!-- <h1 class="hh-slot" style="display: none">我是默认slot1111</h1> -->
         </split>
         <view class="cells-content" @click="showPanel">
-            <div class="cells-title">规格数量选择：</div>
+            <div class="cells-title">规格数量选择</div>
             <div class="single-cell-str" v-if="showSingleCel">
                 已选择{{goodData.specList[0].valueList[0].specValue}}，{{goodCount}}件
             </div>
             <div class="multi-cell-content" v-if="!showSingleCel">
                 <span>请选择规格</span>
             </div>
-            <image class="r-arrow" src="http://m.neosjyx.com/res/right.7cbb4a37.png" mode="aspectFit"/>
+            <image class="r-arrow" src="http://m.neosjyx.com/res/right.7cbb4a37.png"/>
         </view>
         <split></split>
         <view class="infos-content">
             <div class="infos-title">
-                <span class="icon">=</span>
+                <image class="icon" src="/static/img/detail/line@3x.png"/>
                 <span class="title">商品详情</span>
-                <span class="icon">=</span>
+                <image class="icon" src="/static/img/detail/line@3x.png"/>
             </div>
             <ul class="infos-des-list">
                 <li class="item" v-for="(desItem, desIndex) in goodData.goodsDetails" :key="desIndex">
@@ -45,14 +45,14 @@
                 </li>
             </ul>
             <div class="img-list">
-                <image :src="imgItem" v-for="(imgItem, imgIndex) in goodData.detailImageList" :key="imgIndex" mode="aspectFit" />
+                <image class="imgItem" :src="imgItem" v-for="(imgItem, imgIndex) in goodData.detailImageList" :key="imgIndex" mode="widthFix"/>
             </div>
         </view>
         <view class="cart-bar-content">
             <div class="cart-bar">
                 <div class="cart-icon" @click="goToCart">
-                    <image class="icon" src="http://m.neosjyx.com/res/cart.9b748d5e.png" mode="aspectFit"/>
-                    <div :class="calcCartClass" >{{calcCartCount}}</div>
+                    <image class="icon" src="/static/img/detail/shopcart@3x.png"/>
+                    <div :class="calcCartClass">{{calcCartCount}}</div>
                 </div>
                 <div class="cart-text" @click="addToCart">
                     <!-- <loading></loading> -->
@@ -61,7 +61,7 @@
             </div>
         </view>
         <view class="wrap-sku-panel">
-            <skupanel v-model="showPanelStatus"></skupanel>
+            <skupanel v-model="showPanelStatus" :specList="goodData.specList" :skuList="goodData.skuList"></skupanel>
         </view>
     </view>
     <loading v-if="loadingHidden">
@@ -71,7 +71,6 @@
 </template>
 
 <script>
-import card from '@/components/card';
 import split from '@/components/split';
 import skupanel from '@/components/skupanel';
 
@@ -80,28 +79,18 @@ export default {
     data() {
         return {
             loadingHidden: false,
-            bannerArr: [
-                {
-                    id: '111',
-                    url: 'http://res.neosjyx.com/resource/images/photo/7043/20180409/201804090930192.jpg',
-                },
-                {
-                    id: '222',
-                    url: 'http://res.neosjyx.com/resource/images/photo/7043/20180409/201804090930180.jpg',
-                },
-            ],
             goodData: {
                 specList: [],
+                skuList: [],
             },
             fold: true,
             goodCount: 1,
-            cartCount: 100,
+            cartCount: 23,
             // 显示或隐藏面板
             showPanelStatus: false,
         };
     },
     components: {
-        card,
         split,
         skupanel,
     },
@@ -162,10 +151,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../style/base/mixin.scss";
+$green: #77BA2C;
+$orange: #FF6500;
+
 .goods-detail-container{
     .swiper{
-        height: 250px;
         width: 100%;
+        height: 375px;
     }
     .swiper-box{
         overflow-x: hidden;
@@ -179,31 +172,31 @@ export default {
         width: 100%;
     }
     .desc-content{
-        padding: 20px 15px;
+        padding: 7px 15px 11px;
         .title, .sub-title{
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            @include ellipsisLn(2, 18);
         }
         .title{
-            line-height: 24px;
-            font-size: 20px;
+            line-height: 25px;
+            font-size: 17px;
+            color: #333;
         }
         .sub-title{
-            line-height: 18px;
+            line-height: 16px;
             margin: 5px 0 10px;
-            font-size: 14px;
-            color: #999;
+            font-size: 12px;
+            color: #959595;
         }
         .price-now{
             .rmb{
-                font-size: 11px; 
+                font-size: 14px; 
+                line-height: 26px;
+                color: $orange;
             }
             .price{
-                color: red;
-                font-size: 20px; 
+                color: $orange;
+                font-size: 24px; 
+                line-height: 32px;
             }
         }
     }
@@ -213,17 +206,18 @@ export default {
         position: relative;
         height: 50px;
         line-height: 50px;
-        padding: 0 25px 0 20px;
+        padding: 0 26px 0 15px;
         .cells-title{
-            font-size: 16px;
+            font-size: 14px;
+            color: #333;
         }
         .single-cell-str{
-            font-size: 12px;
-            color: #999;
+            font-size: 14px;
+            color: #959595;
         }
         .multi-cell-content{
-            font-size: 12px;
-            color: #999;
+            font-size: 14px;
+            color: #959595;
         }
         .r-arrow{
             position: absolute;
@@ -235,22 +229,38 @@ export default {
     }
     .infos-content{
         .infos-title{
-            padding: 20px 0;
+            height: 50px;
+            line-height: 50px;
             text-align: center;
+            font-size: 14px;
+            color: #959595;
+            .icon{
+                width: 20px;
+                height: 6px;
+            }
+        }
+        .title{
+            margin: 0 7px;
         }
         .infos-des-list{
-            padding: 0 20px;
-            .key, .value{
-                font-size: 12px;
-                color: #999;
-            }
+            margin: 0 20px;
+            padding-bottom: 5px;
+            background: #fff;
             .item{
-                line-height: 22px;
-                padding: 16px 0;
+                font-size: 14px;
+                color: #333;
+                height: 44px;
+                line-height: 44px;
+                border-bottom: 1px solid #E5E5E5;
+                &:last-child{
+                    border: none;
+                }
             }
         }
         .img-list{
-            image{
+            padding-bottom: 50px;
+            .imgItem{
+                display: block;
                 width: 100%;
             }
         }
@@ -278,24 +288,27 @@ export default {
             }
             .num{
                 position: absolute;
-                top: 0;
-                right: 20px;
-                width: 20px;
-                height: 20px;
-                line-height: 20px;
+                top: 4px;
+                left: 44px;
+                width: 15px;
+                height: 15px;
+                line-height: 15px;
                 border-radius: 50%;
-                font-size: 12px;
-                background:red;
+                font-size: 10px;
+                background: $orange;
+                color: #fff;
             }
             .max99{
-                padding: 0 10px;
-                border-radius: 5px;
+                padding: 0 3px;
+                border-radius: 18px;
             }
         }
         .cart-text{
             flex: 1;
             text-align: center;
-            background-color: #ca6
+            background-color: $green;
+            color: #fff;
+            font-size: 17px;
         }
     }
 }
