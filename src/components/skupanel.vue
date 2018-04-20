@@ -15,12 +15,21 @@
                     <li class="sku-item" v-for="(specItem, specIndex) in specList" :key="specIndex">
                         <div class="name">{{specItem.specName}}</div>
                         <div class="list">
-                            <div class="item"
-                                v-for="(valueItem, valueIndex) in specItem.valueList" :key="valueIndex"
-                                :class="{lose: totalSkuNum(valItem.specValue) === 0}"
-                            >
-                                {{valueItem.specValue}}
-                            </div>
+                            <template v-for="(valueItem, valueIndex) in specItem.valueList" >
+                                <div class="item lose"
+                                    v-if="totalSkuNum(valueItem.specValue)"
+                                    :key="valueIndex"
+                                >
+                                    {{valueItem.specValue}}
+                                </div>
+                                <div class="item"
+                                    v-else
+                                    :key="valueIndex"
+                                >
+                                    {{totalSkuNum(valueItem.specValue)}}
+                                    {{valueItem.specValue}}
+                                </div>
+                            </template>
                             <!-- <div class="item">16支装</div>
                             <div class="item lose">32支装</div> -->
                         </div>
@@ -96,6 +105,7 @@
                 this.$emit('close');
             },
             totalSkuNum(value) { // 比如value = 红
+                console.log('value', value)
                 const skuArr = [];
                 this.skuList.forEach((skuItem) => {
                     skuItem.specList.forEach((specItem) => {
@@ -111,22 +121,33 @@
                     specItemTotoal = item.quantity + specItemTotoal;
                 });
                 console.log('每个spec的库存总量', specItemTotoal);
-                return specItemTotoal;
+
+                const result = specItemTotoal === 0 ? 'lose' : '';
+                console.log('result', result)
+                return result
             },
             aa() {
-                this.specList.map((specItem) => {
-                    return specItem.valueList.forEach((valItem) => {
-                        const valItemTemp = valItem;
-                        if (this.totalSkuNum(valItemTemp.specValue) === 0) {
-                            valItemTemp.isLose = true;
-                        }
-                    });
-                });
+                // const newSpecList = [];
+                // this.specList.forEach((specItem) => {
+                //     specItem.valueList.forEach((valItem) => {
+                //         const valItemTemp = valItem;
+                //         if (this.totalSkuNum(valItemTemp.specValue) === 0) {
+                //             valItemTemp.isLose = true;
+                //         }
+                //     });
+                // });
                 // 重新组装一个specList，里面的valueList的 每个item.isLose,每个item.isActive
+                // const newArr = [];
+                // this.specList.forEach((specItem) => {
+                //     specItem.specId
+                // })
+
+                // this.skuList.forEach((item) => {
+                //    item.specList.forEach((inner) => {
+                //        inner.specId
+                //    })
+                // });
             },
-        },
-        mounted() {
-            this.totalSkuNum('8只装');
         },
         computed: {
             calcSpecItemClass() {},
