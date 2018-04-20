@@ -1,4 +1,4 @@
-const serverPath = 'http://172.16.2.71:8068/mockjsdata/116/';
+const serverPath = 'http://127.0.0.1:8888/';
 
 export default function post(url, body) {
     return new Promise((resolve, reject) => {

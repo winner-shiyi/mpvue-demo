@@ -15,8 +15,9 @@
                     <li class="sku-item" v-for="(specItem, specIndex) in specList" :key="specIndex">
                         <div class="name">{{specItem.specName}}</div>
                         <div class="list">
-                            <div class="item active"
+                            <div class="item"
                                 v-for="(valueItem, valueIndex) in specItem.valueList" :key="valueIndex"
+                                :class="{lose: totalSkuNum(valItem.specValue) === 0}"
                             >
                                 {{valueItem.specValue}}
                             </div>
@@ -76,6 +77,8 @@
         data() {
             return {
                 status: this.value,
+                isActive: false,
+                isLose: false,
             }
         },
         watch: {
@@ -92,6 +95,41 @@
                 // 关闭后的回调
                 this.$emit('close');
             },
+            totalSkuNum(value) { // 比如value = 红
+                const skuArr = [];
+                this.skuList.forEach((skuItem) => {
+                    skuItem.specList.forEach((specItem) => {
+                        if (specItem.specValue === value) {
+                            skuArr.push(skuItem);
+                        }
+                    });
+                });
+
+                // skuArr  [{红a}, {红b}, {红c}]
+                let specItemTotoal = 0;
+                skuArr.forEach((item) => {
+                    specItemTotoal = item.quantity + specItemTotoal;
+                });
+                console.log('每个spec的库存总量', specItemTotoal);
+                return specItemTotoal;
+            },
+            aa() {
+                this.specList.map((specItem) => {
+                    return specItem.valueList.forEach((valItem) => {
+                        const valItemTemp = valItem;
+                        if (this.totalSkuNum(valItemTemp.specValue) === 0) {
+                            valItemTemp.isLose = true;
+                        }
+                    });
+                });
+                // 重新组装一个specList，里面的valueList的 每个item.isLose,每个item.isActive
+            },
+        },
+        mounted() {
+            this.totalSkuNum('8只装');
+        },
+        computed: {
+            calcSpecItemClass() {},
         },
         components: {
             cartcontrol,
