@@ -50,6 +50,7 @@
 </template>
 <script>
     import cartcontrol from '@/components/cartcontrol';
+    import SKU from '../utils/SKU';
 
     export default {
         props: {
@@ -86,8 +87,8 @@
         data() {
             return {
                 status: this.value,
-                isActive: false,
-                isLose: false,
+                skuStoreObj: {},
+                specStoreArr: [],
             }
         },
         watch: {
@@ -120,34 +121,51 @@
                 skuArr.forEach((item) => {
                     specItemTotoal = item.quantity + specItemTotoal;
                 });
-                console.log('每个spec的库存总量', specItemTotoal);
+                // console.log('每个spec的库存总量', specItemTotoal);
 
-                const result = specItemTotoal === 0 ? 'lose' : '';
-                console.log('result', result)
-                return result
+                // const result = specItemTotoal === 0 ? 'lose' : '';
+                // console.log('result', result)
+                return 'lose';
             },
-            aa() {
-                // const newSpecList = [];
-                // this.specList.forEach((specItem) => {
-                //     specItem.valueList.forEach((valItem) => {
-                //         const valItemTemp = valItem;
-                //         if (this.totalSkuNum(valItemTemp.specValue) === 0) {
-                //             valItemTemp.isLose = true;
-                //         }
-                //     });
-                // });
-                // 重新组装一个specList，里面的valueList的 每个item.isLose,每个item.isActive
-                // const newArr = [];
-                // this.specList.forEach((specItem) => {
-                //     specItem.specId
-                // })
+            handleSKU() {
+                const oldSkuList = this.skuList;
 
-                // this.skuList.forEach((item) => {
-                //    item.specList.forEach((inner) => {
-                //        inner.specId
-                //    })
-                // });
+                const newSkuList = oldSkuList.map(item => ({
+                    key: item.skuDesc.split(',').sort().join(','),
+                    value: {
+                        store: item.quantity,
+                        price: item.sellingPrice,
+                        productId: item.skuId,
+                        skuImage: item.skuImage,
+                    },
+                }));
+                const skuObj = SKU.allSkuValue(newSkuList, 'store');
+                // 组装skuStoreObj ？?? todo
+                this.skuStoreObj = skuObj;
+                console.log('this.skuStoreObj---', this.skuStoreObj);
             },
+            handleSpec() {
+                const oldSpecList = this.specList;
+                const newSpecList = oldSpecList.map(item => {
+                    // if (this.skuStoreObj[item.specValue].store) {
+
+                    // }
+                    console.log('this.specStoreArr---', this.skuStoreObj['8只装'].store);
+                    return {
+                        ...item,
+                        store: this.skuStoreObj[item.specValue] &&
+                        this.skuStoreObj[item.specValue].store,
+                    }
+                });
+                this.specStoreArr = newSpecList;
+
+                // console.log('this.specStoreArr---', this.skuStoreObj['8只装'].store);
+            },
+
+        },
+        mounted() {
+            this.handleSKU();
+            this.handleSpec();
         },
         computed: {
             calcSpecItemClass() {},
