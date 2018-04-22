@@ -103,6 +103,8 @@
                 const skuObj = SKU.allSkuValue(newSkuList, 'store');
                 this.skuStoreObj = skuObj;
                 this.handleSEC()
+                console.log('this.skuStoreObj---', this.skuStoreObj)
+                this.getSkuPrice()
             },
             handleSEC() {
                 this.specList.forEach((item) => {
@@ -124,19 +126,29 @@
                     let status = false
                     if (key === index && temp.store) {
                         status = true
+                        console.log('点击了', temp.specValue.trim())
                     }
+                    // 针对mpvue class绑定有稳定的hack，保证class变化的时候一定重新渲染模板
                     temp.specValue = temp.specValue.trim()
                     temp.specValue = `${temp.specValue} `
-
+                    // 设置其他规格值为 非选中状态
                     temp.active = status
                 })
+                this.getSkuPrice()
+            },
+            getSkuPrice() {
+                const arr = [];
+                this.specList.forEach((item) => {
+                    item.valueList.forEach((valueItem) => {
+                        if (valueItem.active) {
+                            arr.push(valueItem.specValue.trim())
+                        }
+                    })
+                });
+                this.selectGoodsText = arr.sort().join('，');
+                this.goodPrice = this.skuStoreObj[arr.join(',')].price;
             },
         },
-        // computed: {
-        //     calcPrice () {
-
-        //     }
-        // },
     };
 </script>
 
