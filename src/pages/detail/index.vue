@@ -15,6 +15,7 @@
                 <div class="price-now">
                    <span class="rmb">￥</span> 
                    <span class="price">{{goodData.sellingPrices}}</span>
+                   <!-- <test :list="list"></test> -->
                 </div>
             </view>
         </view>
@@ -75,9 +76,13 @@
 <script>
 import split from '@/components/split';
 import skupanel from '@/components/skupanel';
-
+// import test from '@/components/test';
 
 export default {
+    components: {
+        split,
+        skupanel,
+    },
     data() {
         return {
             loadingHidden: false,
@@ -90,11 +95,9 @@ export default {
             cartCount: 23,
             // 显示或隐藏面板
             showPanelStatus: false,
+            // 测试数据
+            list: [],
         };
-    },
-    components: {
-        split,
-        skupanel,
     },
     computed: {
         showSingleCel() {
@@ -136,7 +139,7 @@ export default {
         }
         console.log('detail页面');
         this.$post('spuDetail', param).then((data) => {
-            console.log('resdetail----', data);
+            // console.log('resdetail----', data);
             this.goodData = data;
         });
     },

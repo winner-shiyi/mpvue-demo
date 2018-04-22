@@ -6,8 +6,8 @@
                     <image class="sm-img" src="http://res.neosjyx.com/resource/images/photo/7043/20180313/201803131732060.jpg"/>
                 </div>
                 <div class="info">
-                    <div class="price">￥16.9</div>
-                    <div class="select">已选：200g，热带水果味</div>
+                    <div class="price">￥{{goodPrice}}</div>
+                    <div class="select">已选：{{selectGoodsText}}</div>
                 </div>
             </div> 
             <div class="sku-content">
@@ -15,16 +15,17 @@
                     <li class="sku-item" v-for="(specItem, specIndex) in specStoreArr" :key="specIndex">
                         <div class="name">{{specItem.specName}}</div>
                         <div class="list">
-                            <template v-for="(valueItem, valueIndex) in specItem.valueList" >
-                                <div class="item"
-                                    :class="{'lose': !valueItem.store}"
-                                    :key="valueIndex"
-                                >
-                                    {{valueItem.specValue}}
-                                </div>
-                            </template>
-                            <!-- <div class="item">16支装</div>
-                            <div class="item lose">32支装</div> -->
+                            <div class="item"
+                                v-for="(valueItem, key) in specItem.valueList"
+                                :class="{
+                                    'lose': !valueItem.store,
+                                    'active': valueItem.active
+                                }"
+                                :key="key"
+                                @click="specItemClick(specItem.valueList, key)"
+                            >
+                                {{valueItem.specValue}}
+                            </div>
                         </div>
                     </li>
                 </ul>
@@ -46,6 +47,9 @@
     import SKU from '../utils/SKU';
 
     export default {
+        components: {
+            cartcontrol,
+        },
         props: {
             value: {
                 type: Boolean,
@@ -53,37 +57,20 @@
             },
             skuList: {
                 type: Array,
-                default() {
-                    return [
-                        {
-                            sellingPrice: '',
-                            specImage: '',
-                            specList: [],
-                            quantity: '',
-                            skuId: '',
-                        },
-                    ]
-                },
+                default: () => ([]),
             },
             specList: {
                 type: Array,
-                default() {
-                    return [
-                        {
-                            specName: '',
-                            valueList: [],
-                        },
-                    ]
-                },
+                default: () => ([]),
             },
         },
         data() {
             return {
                 status: this.value,
-                skuStoreObj: {
-
-                },
-                specStoreArr: [],
+                skuStoreObj: {},
+                specStoreArr: this.specList,
+                goodPrice: '',
+                selectGoodsText: '',
             }
         },
         watch: {
@@ -94,38 +81,17 @@
                 this.$emit('input', val)
             },
         },
+        created() {
+            this.handleSKU();
+        },
         methods: {
             hidePanel() {
                 this.status = false
                 // 关闭后的回调
                 this.$emit('close');
             },
-            totalSkuNum(value) { // 比如value = 红
-                // console.log('value', value)
-                const skuArr = [];
-                this.skuList.forEach((skuItem) => {
-                    skuItem.specList.forEach((specItem) => {
-                        if (specItem.specValue === value) {
-                            skuArr.push(skuItem);
-                        }
-                    });
-                });
-
-                // skuArr  [{红a}, {红b}, {红c}]
-                let specItemTotoal = 0;
-                skuArr.forEach((item) => {
-                    specItemTotoal = item.quantity + specItemTotoal;
-                });
-                // console.log('每个spec的库存总量', specItemTotoal);
-
-                // const result = specItemTotoal === 0 ? 'lose' : '';
-                // console.log('result', result)
-                return 'lose';
-            },
             handleSKU() {
-                const oldSkuList = this.skuList;
-
-                const newSkuList = oldSkuList.map(item => ({
+                const newSkuList = this.skuList.map(item => ({
                     key: item.skuDesc.split(',').sort().join(','),
                     value: {
                         store: item.quantity,
@@ -136,30 +102,41 @@
                 }));
                 const skuObj = SKU.allSkuValue(newSkuList, 'store');
                 this.skuStoreObj = skuObj;
-                console.log('skuStoreObj', this.skuStoreObj)
+                this.handleSEC()
             },
             handleSEC() {
                 this.specList.forEach((item) => {
+                    let isActive = false
                     item.valueList.forEach((valueItem) => {
                         const temp = valueItem;
                         temp.store = this.skuStoreObj[temp.specValue].store
+                        if (!isActive && temp.store) {
+                            temp.active = !!temp.store
+                            isActive = true
+                        }
                     });
                 });
-                this.specStoreArr = this.specList
+            },
+            specItemClick(valueList, key) {
+                if (!valueList[key].store) return
+                valueList.forEach((item, index) => {
+                    const temp = item
+                    let status = false
+                    if (key === index && temp.store) {
+                        status = true
+                    }
+                    temp.specValue = temp.specValue.trim()
+                    temp.specValue = `${temp.specValue} `
+
+                    temp.active = status
+                })
             },
         },
-        created() {
-            this.handleSKU();
-            this.handleSEC();
-            console.log('specList', this.specList)
-        },
-        computed: {
-            calcSpecItemClass() {},
-        },
-        components: {
-            cartcontrol,
-        },
+        // computed: {
+        //     calcPrice () {
 
+        //     }
+        // },
     };
 </script>
 
