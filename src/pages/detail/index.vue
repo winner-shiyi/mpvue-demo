@@ -61,7 +61,9 @@
             </div>
         </view>
         <view class="wrap-sku-panel">
-            <skupanel v-model="showPanelStatus" :specList="goodData.specList" :skuList="goodData.skuList"></skupanel>
+            <template v-if="goodData.specList.length">
+                <skupanel v-model="showPanelStatus" :specList="goodData.specList" :skuList="goodData.skuList"></skupanel>
+            </template>
         </view>
     </view>
     <loading v-if="loadingHidden">
@@ -125,37 +127,6 @@ export default {
         showPanel() {
             this.showPanelStatus = true;
         },
-        // totalSkuNum(value) { // 比如value = 红
-        //     const skuArr = [];
-        //     this.goodData.skuList.forEach((skuItem) => {
-        //         skuItem.specList.forEach((specItem) => {
-        //             if (specItem.specValue === value) {
-        //                 skuArr.push(skuItem);
-        //             }
-        //         });
-        //     });
-
-        //     // skuArr  [{红a}, {红b}, {红c}]
-        //     let specItemTotoal = 0;
-        //     skuArr.forEach((item) => {
-        //         specItemTotoal = item.quantity + specItemTotoal;
-        //     });
-        //     console.log('每个spec的库存总量', specItemTotoal);
-
-        //     return specItemTotoal === 0 ? 'lose' : '';
-        // },
-        // aa() {
-        //     // const newSpecList = [];
-        //     this.goodData.specList.forEach((specItem) => {
-        //         specItem.valueList.forEach((valItem) => {
-        //             const valItemTemp = valItem;
-        //             if (this.totalSkuNum(valItemTemp.specValue) === 0) {
-        //                 valItemTemp.isLose = true;
-        //             }
-        //         });
-        //     });
-        //     // 重新组装一个specList，里面的valueList的 每个item.isLose,每个item.isActive
-        // },
     },
 
     created() {

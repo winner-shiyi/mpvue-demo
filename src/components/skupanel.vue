@@ -12,21 +12,14 @@
             </div> 
             <div class="sku-content">
                 <ul class="sku-ul">
-                    <li class="sku-item" v-for="(specItem, specIndex) in specList" :key="specIndex">
+                    <li class="sku-item" v-for="(specItem, specIndex) in specStoreArr" :key="specIndex">
                         <div class="name">{{specItem.specName}}</div>
                         <div class="list">
                             <template v-for="(valueItem, valueIndex) in specItem.valueList" >
-                                <div class="item lose"
-                                    v-if="totalSkuNum(valueItem.specValue)"
-                                    :key="valueIndex"
-                                >
-                                    {{valueItem.specValue}}
-                                </div>
                                 <div class="item"
-                                    v-else
+                                    :class="{'lose': !valueItem.store}"
                                     :key="valueIndex"
                                 >
-                                    {{totalSkuNum(valueItem.specValue)}}
                                     {{valueItem.specValue}}
                                 </div>
                             </template>
@@ -87,7 +80,9 @@
         data() {
             return {
                 status: this.value,
-                skuStoreObj: {},
+                skuStoreObj: {
+
+                },
                 specStoreArr: [],
             }
         },
@@ -106,7 +101,7 @@
                 this.$emit('close');
             },
             totalSkuNum(value) { // 比如value = 红
-                console.log('value', value)
+                // console.log('value', value)
                 const skuArr = [];
                 this.skuList.forEach((skuItem) => {
                     skuItem.specList.forEach((specItem) => {
@@ -140,32 +135,23 @@
                     },
                 }));
                 const skuObj = SKU.allSkuValue(newSkuList, 'store');
-                // 组装skuStoreObj ？?? todo
                 this.skuStoreObj = skuObj;
-                console.log('this.skuStoreObj---', this.skuStoreObj);
+                console.log('skuStoreObj', this.skuStoreObj)
             },
-            handleSpec() {
-                const oldSpecList = this.specList;
-                const newSpecList = oldSpecList.map(item => {
-                    // if (this.skuStoreObj[item.specValue].store) {
-
-                    // }
-                    console.log('this.specStoreArr---', this.skuStoreObj['8只装'].store);
-                    return {
-                        ...item,
-                        store: this.skuStoreObj[item.specValue] &&
-                        this.skuStoreObj[item.specValue].store,
-                    }
+            handleSEC() {
+                this.specList.forEach((item) => {
+                    item.valueList.forEach((valueItem) => {
+                        const temp = valueItem;
+                        temp.store = this.skuStoreObj[temp.specValue].store
+                    });
                 });
-                this.specStoreArr = newSpecList;
-
-                // console.log('this.specStoreArr---', this.skuStoreObj['8只装'].store);
+                this.specStoreArr = this.specList
             },
-
         },
-        mounted() {
+        created() {
             this.handleSKU();
-            this.handleSpec();
+            this.handleSEC();
+            console.log('specList', this.specList)
         },
         computed: {
             calcSpecItemClass() {},
