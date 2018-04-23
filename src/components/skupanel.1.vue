@@ -3,16 +3,16 @@
         <div class="sku-panel-content" v-show="status">
             <div class="sku-head">
                 <div class="img">
-                    <image class="sm-img" src="http://res.neosjyx.com/resource/images/photo/7043/20180313/201803131732060.jpg"/>
+                    <image class="sm-img" :src="selectGood.skuImage"/>
                 </div>
                 <div class="info">
-                    <div class="price">￥{{selectedGoodObj.price}}</div>
-                    <div class="select">已选：{{selectedGoodObj.text}}</div>
+                    <div class="price">￥{{selectGood.price}}</div>
+                    <div class="select">已选：{{selectGood.text}}</div>
                 </div>
             </div> 
             <div class="sku-content">
                 <ul class="sku-ul">
-                    <li class="sku-item" v-for="(specItem, specIndex) in calcSpecList" :key="specIndex">
+                    <li class="sku-item" v-for="(specItem, specIndex) in specStoreArr" :key="specIndex">
                         <div class="name">{{specItem.specName}}</div>
                         <div class="list">
                             <div class="item"
@@ -32,11 +32,11 @@
                 <div class="counter-content">
                     <div class="name">数量</div>
                     <div class="counter">
-                        <cartcontrol></cartcontrol>
+                        <cartcontrol :goodInfo="selectGood" :initCount="initCount"></cartcontrol>
                     </div>
                 </div>
             </div>
-            <div class="btn">确认</div>
+            <div class="btn" @click="submitSKU">确认</div>
             <image class="close" src="/static/img/detail/close@3x.png" @click="hidePanel"/>
         </div>
         <div class="mask" @click="hidePanel" v-show="status"></div>
@@ -67,10 +67,10 @@
         data() {
             return {
                 status: this.value,
-                // skuStoreObj: {},
-                // specStoreArr: this.specList,
-                // goodPrice: '',
-                // selectGoodsText: '',
+                skuStoreObj: {},
+                specStoreArr: this.specList,
+                selectGood: {},
+                initCount: 1, // 初始化sku数量为1
             }
         },
         watch: {
@@ -82,8 +82,7 @@
             },
         },
         created() {
-            // this.handleSKU();
-            // this.getSkuPrice()
+            this.handleSKU();
         },
         methods: {
             hidePanel() {
@@ -103,13 +102,11 @@
                 }));
                 const skuObj = SKU.allSkuValue(newSkuList, 'store');
                 this.skuStoreObj = skuObj;
-
-                this.handleSEC()
+                this.handleSPC()
                 console.log('this.skuStoreObj---', this.skuStoreObj)
-                // console.log('this.specStoreArr---初始化', this.specList)
-                this.getSkuPrice()
+                this.handleSelectGood()
             },
-            handleSEC() {
+            handleSPC() {
                 this.specList.forEach((item) => {
                     let isActive = false
                     item.valueList.forEach((valueItem) => {
@@ -121,6 +118,19 @@
                         }
                     });
                 });
+            },
+            // 选择某个sku商品时，设置文案、价格、图片、库存
+            handleSelectGood() {
+                const arr = [];
+                this.specList.forEach((item) => {
+                    item.valueList.forEach((valueItem) => {
+                        if (valueItem.active) {
+                            arr.push(valueItem.specValue.trim())
+                        }
+                    })
+                });
+                this.selectGood = this.skuStoreObj[arr.join(',')];
+                this.selectGood.text = arr.sort().join('，');
             },
             specItemClick(valueList, key) {
                 if (!valueList[key].store) return
@@ -135,82 +145,23 @@
                     temp.specValue = temp.specValue.trim()
                     temp.specValue = `${temp.specValue} `
                     // 设置其他规格值为 非选中状态
-                    temp.active = status
-                    // console.log('this.specStoreArr---click', this.specList)
+                    temp.active = status;
                 })
-                // this.getSkuPrice()
+                this.handleSelectGood();
+                this.initCount = 1;
             },
-            getSkuPrice() {
-                const arr = [];
-                this.specList.forEach((item) => {
-                    item.valueList.forEach((valueItem) => {
-                        if (valueItem.active) {
-                            arr.push(valueItem.specValue.trim())
-                        }
-                    })
-                });
-                this.selectGoodsText = arr.sort().join('，');
-                this.goodPrice = this.skuStoreObj[arr.join(',')].price;
-            },
-        },
-        computed: {
-            calcSkuStoreObj() {
-                const newSkuList = this.skuList.map(item => ({
-                    key: item.skuDesc.split(',').sort().join(','),
-                    value: {
-                        store: item.quantity,
-                        price: item.sellingPrice,
-                        productId: item.skuId,
-                        skuImage: item.skuImage,
-                    },
-                }));
-                console.log('calcSkuStoreObj--', SKU.allSkuValue(newSkuList, 'store'))
-                return SKU.allSkuValue(newSkuList, 'store');
-            },
-            list() {
-                return this.specList;
-            },
-            calcSpecList() {
-                return this.list.map((item) => {
-                    let isActive = false;
-                    item.valueList.forEach((valueItem) => {
-                        const temp = valueItem;
-                        temp.store = this.calcSkuStoreObj[temp.specValue].store;
-                        if (!isActive && temp.store) {
-                            temp.active = !!temp.store;
-                            isActive = true;
-                        }
+            submitSKU() {
+                const param = {}
+                this.$post('addCart', param).then((data) => {
+                    console.log('加入购物车接口----', data);
+                    this.$emit('add', this.selectGood.text);
+                    this.hidePanel()
+                    wx.showToast({
+                        title: '加入购物车成功',
+                        icon: 'none',
                     });
-                    return item;
-                })
-            },
-            selectedGoodObj() {
-                const arr = [];
-                const selectedObj = {};
-                this.calcSpecList.forEach((item) => {
-                    item.valueList.forEach((valueItem) => {
-                        console.log('active1-----', valueItem, valueItem.active)
-                        if (valueItem.active) {
-                            console.log('active2-----', valueItem.active)
-                            arr.push(valueItem.specValue.trim());
-                        }
-                    })
                 });
-                selectedObj.text = arr.sort().join('，');
-                console.log('选择的数组--', arr.sort().join(','))
-                selectedObj.price = this.calcSkuStoreObj[arr.sort().join(',')].price;
-                selectedObj.store = this.calcSkuStoreObj[arr.join(',')].store;
-                return selectedObj;
             },
-            // calcPrice() {
-            //     const arr = this.selectedGoodArr;
-            //     return this.calcSkuStoreObj[arr.sort().join(',')].price;
-            // },
-            // calcText() {
-            //     const arr = this.selectedGoodArr;
-            //     return arr.sort().join('，');
-            // },
-
         },
     };
 </script>
@@ -224,7 +175,6 @@
             left: 0;
             z-index: 20;
             width: 100%;
-            // height: 453px;
             padding-bottom: 49px;
             background: #fff;
             .close{

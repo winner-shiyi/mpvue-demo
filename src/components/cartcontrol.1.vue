@@ -1,66 +1,55 @@
 <template>
     <div class="cartcontrol-content">
-        <div class="cut" @click="editHandler(0)" :class="{disabled: isMin}">-</div>
+        <div class="cut" @click="decreaseCart" :class="{disabled: count === 1}">-</div>
         <input type="number" class="input" v-model.number="count" max="999" >
-        <div class="add" :class="{disabled: isMax}" @click="editHandler(1)">+</div>
+        <div class="add" :class="{'disabled': calcCount}" @click="addCart">+</div>
     </div>
 </template>
 
 <script>
     // 常量表示：允许最大输入值
-    const DEFAULT_MAX = 999;
-    // 默认最小数量
-    const DEFAULT_NUM = 1;
+    const MAX = 999;
 
     export default {
         props: {
-            value: {
-                type: Number,
-                default: DEFAULT_NUM,
+            goodInfo: {
+                type: Object,
+                default: () => ({}),
             },
-            max: {
+            initCount: {
                 type: Number,
-                default: DEFAULT_MAX,
             },
+
         },
         data() {
             return {
-                count: this.value,
+                count: this.initCount || 1,
             }
-        },
-        computed: {
-            isMin() {
-                return this.count <= DEFAULT_NUM
-            },
-            isMax() {
-                return this.count >= this.max
-            },
         },
         watch: {
             count(val) {
                 if (val <= 0) {
-                    this.count = DEFAULT_NUM
+                    this.count = 1
                 }
-                this.$emit('input', val)
-            },
-            value(val) {
-                this.count = val
             },
         },
         methods: {
-            /**
-             * 加减点击操作
-             * @param {Number} type - 1:加, 0: 减
-             */
-            editHandler(type) {
-                if (type === 1 && this.count < this.max) {
+            decreaseCart() {
+                if (this.count === 1) return
+                this.count -= 1
+            },
+            addCart() {
+                if (this.canAddCount) {
                     this.count += 1
-                }
-                if (type === 0 && this.count > DEFAULT_NUM) {
-                    this.count -= 1
                 }
             },
         },
+        computed: {
+            canAddCount() {
+                return (this.count < MAX) && (this.count < this.goodInfo.store) ? 'true' : false
+            },
+        },
+
     }
 </script>
 <style lang="scss" scoped>

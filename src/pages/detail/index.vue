@@ -23,7 +23,7 @@
         <view class="cells-content" @click="showPanel">
             <div class="cells-title">规格数量选择</div>
             <div class="single-cell-str" v-if="showSingleCel">
-                已选择，{{goodData.specList[0].valueList[0].specValue}}{{goodCount}}件
+                已选择，{{goodData.specList[0].valueList[0].specValue}}{{singleSpecCount}}件
             </div>
             <div class="multi-cell-content" v-if="!showSingleCel">
                 <span>{{specText}}</span>
@@ -96,7 +96,7 @@ export default {
                 specList: [],
                 skuList: [],
             },
-            goodCount: 1,
+            singleSpecCount: 1, // 单规格选择数量
             cartCount: 0,
             // 显示或隐藏面板
             showPanelStatus: false,
@@ -161,20 +161,15 @@ export default {
         genSpecText() {
             this.specText = this.goodData.saleStatus === STOCK ? '商品已下架' : '请选择规格'
         },
-        selectGood(value) {
-            console.log('监听到规格面板加入购物车成功')
-            const newVal = `已选择${value}`
+        selectGood(value, num) {
+            // 更新购物车数量
+            this.cartCount += num;
+            // 更新多规格规格选择文案
+            const newVal = `已选择${value}，${num}件`
             this.specText = newVal.length > 24 ? `${newVal.slice(0, 13)}..` : newVal
+            // 单规格选择文案
+            this.singleSpecCount = num
         },
-    },
-    onLoad() {
-        console.log('onLoad');
-    },
-    onShow() {
-        console.log('onShow');
-    },
-    mounted() {
-        console.log('mounted');
     },
 };
 </script>

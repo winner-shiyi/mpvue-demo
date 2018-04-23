@@ -32,7 +32,7 @@
                 <div class="counter-content">
                     <div class="name">数量</div>
                     <div class="counter">
-                        <cartcontrol :goodInfo="selectGood" :initCount="initCount"></cartcontrol>
+                        <cartcontrol v-model="initCount" :max="selectGood.store"></cartcontrol>
                     </div>
                 </div>
             </div>
@@ -131,6 +131,7 @@
                 });
                 this.selectGood = this.skuStoreObj[arr.join(',')];
                 this.selectGood.text = arr.sort().join('，');
+                console.log(this.selectGood)
             },
             specItemClick(valueList, key) {
                 if (!valueList[key].store) return
@@ -154,7 +155,7 @@
                 const param = {}
                 this.$post('addCart', param).then((data) => {
                     console.log('加入购物车接口----', data);
-                    this.$emit('add', this.selectGood.text);
+                    this.$emit('add', this.selectGood.text, this.initCount);
                     this.hidePanel()
                     wx.showToast({
                         title: '加入购物车成功',
