@@ -1,6 +1,5 @@
 <template>
   <div class="container" @click="clickHandle('传入的msg', $event)">
-
     <div class="userinfo" @click="bindViewTap">
       <img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" background-size="cover" />
       <div class="userinfo-nickname">

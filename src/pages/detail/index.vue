@@ -19,18 +19,16 @@
                 </div>
             </view>
         </view>
-        <split>
-            <!-- <h1 class="hh-slot" style="display: none">我是默认slot1111</h1> -->
-        </split>
+        <split></split>
         <view class="cells-content" @click="showPanel">
             <div class="cells-title">规格数量选择</div>
             <div class="single-cell-str" v-if="showSingleCel">
-                已选择{{goodData.specList[0].valueList[0].specValue}}，{{goodCount}}件
+                已选择，{{goodData.specList[0].valueList[0].specValue}}{{goodCount}}件
             </div>
             <div class="multi-cell-content" v-if="!showSingleCel">
-                <span>请选择规格</span>
+                <span>{{specText}}</span>
             </div>
-            <image class="r-arrow" src="http://m.neosjyx.com/res/right.7cbb4a37.png"/>
+            <image class="r-arrow" src="/static/img/detail/arrow@3x.png"/>
         </view>
         <split></split>
         <view class="infos-content">
@@ -63,7 +61,12 @@
         </view>
         <view class="wrap-sku-panel">
             <template v-if="goodData.specList.length">
-                <skupanel v-model="showPanelStatus" :specList="goodData.specList" :skuList="goodData.skuList"></skupanel>
+                <skupanel
+                    v-model="showPanelStatus"
+                    :specList="goodData.specList"
+                    :skuList="goodData.skuList"
+                    @add="selectGood"
+                ></skupanel>
             </template>
         </view>
     </view>
@@ -78,6 +81,9 @@ import split from '@/components/split';
 import skupanel from '@/components/skupanel';
 // import test from '@/components/test';
 
+// 常量表示：商品下架
+const STOCK = '1';
+
 export default {
     components: {
         split,
@@ -90,14 +96,29 @@ export default {
                 specList: [],
                 skuList: [],
             },
-            fold: true,
             goodCount: 1,
-            cartCount: 23,
+            cartCount: 0,
             // 显示或隐藏面板
             showPanelStatus: false,
-            // 测试数据
-            list: [],
+            singleSpecText: '', // 单规格默认文案
+            specText: '', // 多规格默认文案
         };
+    },
+    created() {
+        const param = {
+            shopId: '',
+            spuId: '',
+        }
+        // 获取商品详情数据
+        this.$post('spuDetail', param).then((data) => {
+            // console.log('resdetail----', data);
+            this.goodData = data;
+            this.genSpecText();
+        });
+        // 获取购物车数量
+        this.$post('getCartAmont').then((data) => {
+            this.cartCount = data.count;
+        })
     },
     computed: {
         showSingleCel() {
@@ -110,38 +131,41 @@ export default {
         calcCartClass() {
             return this.cartCount > 9 ? 'num max99' : 'num'
         },
+        calcStore() {
+            let totalStore = 0
+            this.goodData.skuList.forEach((sku) => {
+                totalStore += sku.quantity
+            })
+            console.log('this.totalStore---', totalStore)
+            return totalStore
+        },
     },
     methods: {
         addToCart() {
             if (this.showSingleCel) {
                 // 1、如果是单规格的话，直接调用接口，成功的话，toast提示加入购物车成功
             } else {
-                 // 2、如果是多规格的话,总是弹起规格面板
-                // this.fold = false;
+                // 2、如果是多规格的话,总是弹起规格面板
                 this.showPanel();
             }
-            // console.log(this.$refs.skupanelaa);
-            // this.$refs.skupanelaa.show();
         },
         goToCart() {
-            const url = '../logs/main';
-            wx.navigateTo({ url });
+            const url = '../cart/main';
+            wx.switchTab({ url });
         },
         showPanel() {
-            this.showPanelStatus = true;
+            // 如果商品下架 或 商品总库存为 0 则不弹出规格面板
+            if (this.goodData.saleStatus === STOCK || !this.calcStore) return
+            this.showPanelStatus = true
         },
-    },
-
-    created() {
-        const param = {
-            shopId: '',
-            spuId: '',
-        }
-        console.log('detail页面');
-        this.$post('spuDetail', param).then((data) => {
-            // console.log('resdetail----', data);
-            this.goodData = data;
-        });
+        genSpecText() {
+            this.specText = this.goodData.saleStatus === STOCK ? '商品已下架' : '请选择规格'
+        },
+        selectGood(value) {
+            console.log('监听到规格面板加入购物车成功')
+            const newVal = `已选择${value}`
+            this.specText = newVal.length > 24 ? `${newVal.slice(0, 13)}..` : newVal
+        },
     },
     onLoad() {
         console.log('onLoad');

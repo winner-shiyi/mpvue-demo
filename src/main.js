@@ -20,7 +20,7 @@ export default {
         pages: [
             'pages/index/main',
             'pages/logs/main',
-            'pages/demo/main',
+            'pages/cart/main',
             'pages/my/main',
             '^pages/detail/main',
         ],
@@ -39,7 +39,7 @@ export default {
                     text: '商品详情页',
                 },
                 {
-                    pagePath: 'pages/demo/main',
+                    pagePath: 'pages/cart/main',
                     text: '购物车',
                 },
                 {
