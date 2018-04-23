@@ -3,11 +3,11 @@
         <div class="sku-panel-content" v-show="status">
             <div class="sku-head">
                 <div class="img">
-                    <image class="sm-img" :src="selectGoodImage"/>
+                    <image class="sm-img" :src="selectGood.skuImage"/>
                 </div>
                 <div class="info">
-                    <div class="price">￥{{selectGoodPrice}}</div>
-                    <div class="select">已选：{{selectGoodText}}</div>
+                    <div class="price">￥{{selectGood.price}}</div>
+                    <div class="select">已选：{{selectGood.text}}</div>
                 </div>
             </div> 
             <div class="sku-content">
@@ -32,7 +32,7 @@
                 <div class="counter-content">
                     <div class="name">数量</div>
                     <div class="counter">
-                        <cartcontrol></cartcontrol>
+                        <cartcontrol :goodInfo="selectGood" :initCount="initCount"></cartcontrol>
                     </div>
                 </div>
             </div>
@@ -69,10 +69,8 @@
                 status: this.value,
                 skuStoreObj: {},
                 specStoreArr: this.specList,
-                selectGoodPrice: '',
-                selectGoodText: '',
-                selectGoodImage: '',
-                selectGoodStore: '',
+                selectGood: {},
+                initCount: 1, // 初始化sku数量为1
             }
         },
         watch: {
@@ -131,10 +129,8 @@
                         }
                     })
                 });
-                this.selectGoodText = arr.sort().join('，');
-                this.selectGoodPrice = this.skuStoreObj[arr.join(',')].price;
-                this.selectGoodImage = this.skuStoreObj[arr.join(',')].skuImage;
-                this.selectGoodStore = this.skuStoreObj[arr.join(',')].store;
+                this.selectGood = this.skuStoreObj[arr.join(',')];
+                this.selectGood.text = arr.sort().join('，');
             },
             specItemClick(valueList, key) {
                 if (!valueList[key].store) return
@@ -149,15 +145,16 @@
                     temp.specValue = temp.specValue.trim()
                     temp.specValue = `${temp.specValue} `
                     // 设置其他规格值为 非选中状态
-                    temp.active = status
+                    temp.active = status;
                 })
                 this.handleSelectGood();
+                this.initCount = 1;
             },
             submitSKU() {
                 const param = {}
                 this.$post('addCart', param).then((data) => {
                     console.log('加入购物车接口----', data);
-                    this.$emit('add', this.selectGoodText)
+                    this.$emit('add', this.selectGood.text);
                     this.hidePanel()
                     wx.showToast({
                         title: '加入购物车成功',
@@ -178,7 +175,6 @@
             left: 0;
             z-index: 20;
             width: 100%;
-            // height: 453px;
             padding-bottom: 49px;
             background: #fff;
             .close{
