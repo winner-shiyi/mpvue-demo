@@ -8,5 +8,8 @@ export default {
     // 这个字段走 app.json
     config: {
         navigationBarTitleText: '购物车',
+        usingComponents: {
+            'slide-left': '/components/slider-left/index',
+        },
     },
 };
